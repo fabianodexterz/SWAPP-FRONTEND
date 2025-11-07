@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: { appDir: true },
-  // Intencionalmente NÃO definimos `output: 'export'` para evitar build estático puro.
+  // Garante build em modo server (NÃO estático)
+  // Remova qualquer 'output: "export"' anterior
+  output: undefined,
+  images: { unoptimized: false },
+  experimental: {
+    typedRoutes: true
+  }
 };
-
 export default nextConfig;
