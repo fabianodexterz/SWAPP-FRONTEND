@@ -1,9 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',            // gera HTML estático em /out
-  trailingSlash: true,         // ajuda em hospedagem estática (cPanel)
-  images: { unoptimized: true },
   reactStrictMode: true,
+  experimental: { appDir: true },
+  // Intencionalmente NÃO definimos `output: 'export'` para evitar build estático puro.
 };
 
 export default nextConfig;
