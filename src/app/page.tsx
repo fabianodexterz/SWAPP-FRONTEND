@@ -1,11 +1,11 @@
+import Link from "next/link";
+
 export default function Home() {
-  // Conteúdo simples caso o middleware não rode
   return (
-    <main className="min-h-screen grid place-items-center p-8">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold">SWAPP</h1>
-        <p className="opacity-70">Carregando...</p>
-      </div>
+    <main>
+      <h1 style={{fontSize:32, fontWeight:700, marginBottom:12}}>SWAPP — Home</h1>
+      <p style={{opacity:.8, marginBottom:16}}>Se você vê isso, o build e as rotas estão funcionando.</p>
+      <Link href="/login" style={{display:'inline-block', padding:'10px 14px', borderRadius:10, background:'#111827', border:'1px solid #30363d'}}>Ir para Login</Link>
     </main>
   );
 }
