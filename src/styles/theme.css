@@ -1,0 +1,86 @@
+:root {
+  --brand-gold: #e9c46a;
+  --brand-yellow: #f4d389;
+  --brand-red: #ff4d4d;
+  --brand-blue: #4da6ff;
+  --brand-green: #9acd32;
+  --brand-light: #ffe680;
+  --brand-dark: #b366ff;
+  --brand-brown: #3a2a19;
+
+  --surface-app: #0f0c09;
+  --surface-card: #1a1410;
+  --surface-raised: #2a1e13;
+
+  --text-main: #f7e9d4;
+  --text-muted: #cbb797;
+  --text-invert: #0c0906;
+}
+
+body {
+  background: radial-gradient(1600px 900px at 70% -10%, var(--brand-brown) 0%, var(--surface-app) 35%) fixed !important;
+  color: var(--text-main);
+  min-height: 100vh;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+}
+
+.sw-card {
+  background: var(--surface-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  padding: 1rem;
+}
+
+.sw-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .45rem .8rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text-main);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.sw-chip--gold {
+  background: linear-gradient(180deg, var(--brand-yellow), var(--brand-gold));
+  color: var(--text-invert);
+  border-color: rgba(0,0,0,0.15);
+}
+
+.sw-input, .sw-select {
+  background: #14100d;
+  color: var(--text-main);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: .6rem .75rem;
+  outline: none;
+}
+.sw-input:focus, .sw-select:focus {
+  border-color: var(--brand-gold);
+  box-shadow: 0 0 0 3px rgba(233,196,106,.18);
+}
+
+.sw-btn {
+  background: linear-gradient(180deg, #d48b27 0%, #a35e06 100%);
+  color: #fff;
+  border: 1px solid rgba(244,211,137,.25);
+  border-radius: 10px;
+  padding: .55rem 1rem;
+  font-weight: 700;
+  transition: filter .15s ease, transform .05s ease;
+}
+.sw-btn:hover { filter: brightness(1.05); }
+.sw-btn:active { transform: translateY(1px); }
+.sw-btn.secondary {
+  background: #20160f;
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--text-main);
+}
+
+.el-pill {
+  display:inline-flex; align-items:center; gap:.4rem;
+  padding:.25rem .6rem; border-radius:999px; border:1px solid rgba(255,255,255,.12);
+  background:#14100d; color:#fff; font-size:.85rem;
+}
+.el-pill img{ width:16px; height:16px; }

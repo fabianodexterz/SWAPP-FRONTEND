@@ -1,0 +1,1103 @@
+// Generated 2025-11-04T11:04:39.623898Z
+export type LocaleText = { en: string; pt: string };
+
+export interface Preset {
+  id: string;
+  role: string[];
+  name: LocaleText;
+  description: LocaleText;
+  game_modes: string[];
+  runes: {
+    primary_sets: string[];
+    secondary_sets: string[];
+    slot246: string[];
+  };
+  artifacts: { type: string[]; focus: string[] };
+  stat_priority: string[];
+  required_caps: Record<'pt'|'en', Record<string, number>>;
+  status_maximos_exigidos: Record<string, number>;
+}
+
+export interface PresetsBundle {
+  version: string;
+  generated_at: string;
+  presets: Preset[];
+  notes: Record<'pt'|'en', string>;
+}
+
+export const PRESETS_BUNDLE: PresetsBundle = {
+  "version": "2025.11.04",
+  "generated_at": "2025-11-04T11:04:39.623898Z",
+  "presets": [
+    {
+      "id": "speed-opener",
+      "role": [
+        "Speed",
+        "Opener"
+      ],
+      "name": {
+        "en": "Speed Opener",
+        "pt": "Abertura de Velocidade"
+      },
+      "description": {
+        "en": "Fastest unit to move first and set tempo (ATB push/strip/defense break).",
+        "pt": "Unidade mais rápida para jogar primeiro e ditar o ritmo (ATB/strip/break de defesa)."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA",
+        "GvG/Siege"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Swift",
+          "Violent"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Focus",
+          "Broken"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "ACC%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Skill 1 Accuracy",
+          "Skill 2 Accuracy"
+        ]
+      },
+      "stat_priority": [
+        "SPD",
+        "ACC",
+        "HP%",
+        "RES"
+      ],
+      "required_caps": {
+        "pt": {
+          "SPD_min": 300,
+          "ACC_min": 70,
+          "RES_min": 0,
+          "HP%_min": 60
+        },
+        "en": {
+          "SPD_min": 300,
+          "ACC_min": 70,
+          "RES_min": 0,
+          "HP%_min": 60
+        }
+      },
+      "status_maximos_exigidos": {
+        "SPD": 350,
+        "ACC": 100,
+        "RES": 100,
+        "HP%": 100
+      }
+    },
+    {
+      "id": "stripper",
+      "role": [
+        "Stripper",
+        "Setup"
+      ],
+      "name": {
+        "en": "Stripper",
+        "pt": "Removedor (Strip)"
+      },
+      "description": {
+        "en": "Removes enemy buffs reliably; can open or follow the opener.",
+        "pt": "Remove buffs do inimigo com confiabilidade; pode abrir ou seguir o opener."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA",
+        "Siege"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Swift",
+          "Despair",
+          "Violent"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Focus",
+          "Broken"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "ACC%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Skill 1 Accuracy",
+          "Skill 2 Accuracy"
+        ]
+      },
+      "stat_priority": [
+        "SPD",
+        "ACC",
+        "HP%",
+        "RES"
+      ],
+      "required_caps": {
+        "pt": {
+          "SPD_min": 280,
+          "ACC_min": 85,
+          "HP%_min": 70
+        },
+        "en": {
+          "SPD_min": 280,
+          "ACC_min": 85,
+          "HP%_min": 70
+        }
+      },
+      "status_maximos_exigidos": {
+        "SPD": 340,
+        "ACC": 100,
+        "HP%": 100
+      }
+    },
+    {
+      "id": "def-breaker-fast",
+      "role": [
+        "Defense Breaker"
+      ],
+      "name": {
+        "en": "Fast DEF Breaker",
+        "pt": "Quebra-DEF Rápido"
+      },
+      "description": {
+        "en": "Fast and accurate defense breaker to set up nukers.",
+        "pt": "Quebrador de DEF rápido e preciso para preparar os nukers."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA",
+        "Siege",
+        "Dungeon"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Swift",
+          "Violent"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Focus",
+          "Broken"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "ACC%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Skill 1 Accuracy"
+        ]
+      },
+      "stat_priority": [
+        "SPD",
+        "ACC",
+        "HP%"
+      ],
+      "required_caps": {
+        "pt": {
+          "SPD_min": 270,
+          "ACC_min": 70,
+          "HP%_min": 60
+        },
+        "en": {
+          "SPD_min": 270,
+          "ACC_min": 70,
+          "HP%_min": 60
+        }
+      },
+      "status_maximos_exigidos": {
+        "SPD": 330,
+        "ACC": 100,
+        "HP%": 100
+      }
+    },
+    {
+      "id": "nuker-crit",
+      "role": [
+        "Damage Dealer",
+        "Nuker"
+      ],
+      "name": {
+        "en": "Crit Nuker",
+        "pt": "Nuker Crítico"
+      },
+      "description": {
+        "en": "High burst damage with Crit Rate/Crit Damage focus.",
+        "pt": "Dano explosivo com foco em Taxa/ Dano Crítico."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA",
+        "Siege",
+        "Dungeon"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Fatal",
+          "Rage",
+          "Violent",
+          "Despair"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Blade",
+          "Broken"
+        ],
+        "slot246": [
+          "ATK%",
+          "CR%",
+          "CD%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Attack"
+        ],
+        "focus": [
+          "Skill 1 Crit DMG",
+          "Atk increasing effect"
+        ]
+      },
+      "stat_priority": [
+        "ATK%",
+        "CD%",
+        "CR%",
+        "SPD"
+      ],
+      "required_caps": {
+        "pt": {
+          "CR%_min": 85,
+          "CD%_min": 170,
+          "ATK%_min": 100,
+          "SPD_min": 100
+        },
+        "en": {
+          "CR%_min": 85,
+          "CD%_min": 170,
+          "ATK%_min": 100,
+          "SPD_min": 100
+        }
+      },
+      "status_maximos_exigidos": {
+        "CR%": 100,
+        "CD%": 250,
+        "ATK%": 200,
+        "SPD": 250
+      }
+    },
+    {
+      "id": "bruiser",
+      "role": [
+        "Bruiser",
+        "Sustain DPS"
+      ],
+      "name": {
+        "en": "Bruiser",
+        "pt": "Bruiser"
+      },
+      "description": {
+        "en": "Tanky damage dealer with sustain; survives long fights.",
+        "pt": "Dealer de dano resistente com sustain; sobrevive lutas longas."
+      },
+      "game_modes": [
+        "RTA",
+        "Siege"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Vampire"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Destroy",
+          "Broken"
+        ],
+        "slot246": [
+          "HP%",
+          "CR%",
+          "CD%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "HP"
+        ],
+        "focus": [
+          "Damage dealt on Fire/Water/Wind"
+        ]
+      },
+      "stat_priority": [
+        "HP%",
+        "DEF%",
+        "CR%",
+        "CD%",
+        "RES"
+      ],
+      "required_caps": {
+        "pt": {
+          "HP%_min": 100,
+          "DEF%_min": 70,
+          "CR%_min": 70,
+          "CD%_min": 140
+        },
+        "en": {
+          "HP%_min": 100,
+          "DEF%_min": 70,
+          "CR%_min": 70,
+          "CD%_min": 140
+        }
+      },
+      "status_maximos_exigidos": {
+        "HP%": 200,
+        "DEF%": 150,
+        "CR%": 100,
+        "CD%": 220
+      }
+    },
+    {
+      "id": "healer-cleanser",
+      "role": [
+        "Healer",
+        "Cleanser"
+      ],
+      "name": {
+        "en": "Healer/Cleanser",
+        "pt": "Suporte Curador/Purificador"
+      },
+      "description": {
+        "en": "Sustain through heals, immunity and cleanse.",
+        "pt": "Sustain através de cura, imunidade e limpeza."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA",
+        "Siege",
+        "Raid"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Swift"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Nemesis",
+          "Broken"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "RES%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Damage reduced from AoE"
+        ]
+      },
+      "stat_priority": [
+        "SPD",
+        "HP%",
+        "RES",
+        "DEF%"
+      ],
+      "required_caps": {
+        "pt": {
+          "SPD_min": 240,
+          "HP%_min": 90,
+          "RES_min": 85
+        },
+        "en": {
+          "SPD_min": 240,
+          "HP%_min": 90,
+          "RES_min": 85
+        }
+      },
+      "status_maximos_exigidos": {
+        "SPD": 320,
+        "HP%": 200,
+        "RES": 100
+      }
+    },
+    {
+      "id": "controller-desair",
+      "role": [
+        "Control",
+        "Stun"
+      ],
+      "name": {
+        "en": "AoE Controller (Despair)",
+        "pt": "Controle em Área (Despair)"
+      },
+      "description": {
+        "en": "Controls enemies with AoE stuns and slows.",
+        "pt": "Controla inimigos com atordoamentos e lentidão em área."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA",
+        "Siege"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Despair"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Focus"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "ACC%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Skill 2 Accuracy",
+          "Damage dealt on Wind/Water/Fire"
+        ]
+      },
+      "stat_priority": [
+        "SPD",
+        "ACC",
+        "HP%",
+        "RES"
+      ],
+      "required_caps": {
+        "pt": {
+          "SPD_min": 250,
+          "ACC_min": 85,
+          "HP%_min": 80
+        },
+        "en": {
+          "SPD_min": 250,
+          "ACC_min": 85,
+          "HP%_min": 80
+        }
+      },
+      "status_maximos_exigidos": {
+        "SPD": 320,
+        "ACC": 100,
+        "HP%": 200
+      }
+    },
+    {
+      "id": "bomber",
+      "role": [
+        "Bomber",
+        "Control"
+      ],
+      "name": {
+        "en": "Bomber",
+        "pt": "Bombeiro (Bombas)"
+      },
+      "description": {
+        "en": "Stacks bombs with high ACC and survivability.",
+        "pt": "Empilha bombas com alta precisão e sobrevivência."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Swift"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Focus"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "ACC%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Attack"
+        ],
+        "focus": [
+          "Skill 2 Accuracy",
+          "Bomb DMG"
+        ]
+      },
+      "stat_priority": [
+        "ACC",
+        "SPD",
+        "HP%"
+      ],
+      "required_caps": {
+        "pt": {
+          "ACC_min": 85,
+          "SPD_min": 230,
+          "HP%_min": 70
+        },
+        "en": {
+          "ACC_min": 85,
+          "SPD_min": 230,
+          "HP%_min": 70
+        }
+      },
+      "status_maximos_exigidos": {
+        "ACC": 100,
+        "SPD": 310,
+        "HP%": 200
+      }
+    },
+    {
+      "id": "dotter",
+      "role": [
+        "DoT",
+        "Raid/Dungeon"
+      ],
+      "name": {
+        "en": "Damage over Time",
+        "pt": "Dano por Segundos (DoT)"
+      },
+      "description": {
+        "en": "Stacks continuous damage; focuses accuracy and speed.",
+        "pt": "Empilha dano contínuo; foca precisão e velocidade."
+      },
+      "game_modes": [
+        "Dungeon",
+        "Raid"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Swift"
+        ],
+        "secondary_sets": [
+          "Focus",
+          "Broken"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "ACC%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Skill 1 Accuracy"
+        ]
+      },
+      "stat_priority": [
+        "ACC",
+        "SPD",
+        "HP%"
+      ],
+      "required_caps": {
+        "pt": {
+          "ACC_min": 85,
+          "SPD_min": 220,
+          "HP%_min": 70
+        },
+        "en": {
+          "ACC_min": 85,
+          "SPD_min": 220,
+          "HP%_min": 70
+        }
+      },
+      "status_maximos_exigidos": {
+        "ACC": 100,
+        "SPD": 300,
+        "HP%": 200
+      }
+    },
+    {
+      "id": "tank-hp",
+      "role": [
+        "Tank"
+      ],
+      "name": {
+        "en": "HP Tank/Provoker",
+        "pt": "Tank de HP/Provocador"
+      },
+      "description": {
+        "en": "Maximizes effective HP and resistance; may provoke.",
+        "pt": "Maximiza HP efetivo e resistência; pode provocar."
+      },
+      "game_modes": [
+        "Siege",
+        "RTA",
+        "Dungeon"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Guard",
+          "Endure",
+          "Violent",
+          "Vampire"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Destroy"
+        ],
+        "slot246": [
+          "HP%",
+          "HP%",
+          "RES%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "HP"
+        ],
+        "focus": [
+          "DMG reduction from element"
+        ]
+      },
+      "stat_priority": [
+        "HP%",
+        "RES",
+        "DEF%"
+      ],
+      "required_caps": {
+        "pt": {
+          "HP%_min": 150,
+          "RES_min": 85,
+          "DEF%_min": 60
+        },
+        "en": {
+          "HP%_min": 150,
+          "RES_min": 85,
+          "DEF%_min": 60
+        }
+      },
+      "status_maximos_exigidos": {
+        "HP%": 250,
+        "RES": 100,
+        "DEF%": 150
+      }
+    },
+    {
+      "id": "reviver",
+      "role": [
+        "Reviver",
+        "Support"
+      ],
+      "name": {
+        "en": "Reviver",
+        "pt": "Reviver"
+      },
+      "description": {
+        "en": "Keeps team alive with revives; needs resist and speed.",
+        "pt": "Mantém o time vivo com reviver; precisa de resistência e velocidade."
+      },
+      "game_modes": [
+        "Arena",
+        "RTA",
+        "Siege"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Swift"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Nemesis"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "RES%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Damage reduced from Critical Hits"
+        ]
+      },
+      "stat_priority": [
+        "SPD",
+        "RES",
+        "HP%"
+      ],
+      "required_caps": {
+        "pt": {
+          "RES_min": 85,
+          "SPD_min": 230,
+          "HP%_min": 80
+        },
+        "en": {
+          "RES_min": 85,
+          "SPD_min": 230,
+          "HP%_min": 80
+        }
+      },
+      "status_maximos_exigidos": {
+        "RES": 100,
+        "SPD": 310,
+        "HP%": 200
+      }
+    },
+    {
+      "id": "r5-healer",
+      "role": [
+        "Raid R5",
+        "Healer"
+      ],
+      "name": {
+        "en": "Raid R5 Healer",
+        "pt": "Curador para Raid R5"
+      },
+      "description": {
+        "en": "Sustain and cleanse for Raid R5; prioritize RES.",
+        "pt": "Sustain e cleanse para Raid R5; priorize resistência."
+      },
+      "game_modes": [
+        "Raid"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Swift"
+        ],
+        "secondary_sets": [
+          "Endure",
+          "Will",
+          "Broken"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "RES%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Damage reduced from bosses"
+        ]
+      },
+      "stat_priority": [
+        "RES",
+        "HP%",
+        "SPD"
+      ],
+      "required_caps": {
+        "pt": {
+          "RES_min": 85,
+          "HP%_min": 120,
+          "SPD_min": 210
+        },
+        "en": {
+          "RES_min": 85,
+          "HP%_min": 120,
+          "SPD_min": 210
+        }
+      },
+      "status_maximos_exigidos": {
+        "RES": 100,
+        "HP%": 220,
+        "SPD": 300
+      }
+    },
+    {
+      "id": "r5-dps",
+      "role": [
+        "Raid R5",
+        "DPS"
+      ],
+      "name": {
+        "en": "Raid R5 DPS",
+        "pt": "DPS para Raid R5"
+      },
+      "description": {
+        "en": "Consistent damage with survivability for Raid R5.",
+        "pt": "Dano consistente com sobrevivência para Raid R5."
+      },
+      "game_modes": [
+        "Raid"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Rage"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Destroy"
+        ],
+        "slot246": [
+          "ATK%",
+          "CR%",
+          "CD%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Attack"
+        ],
+        "focus": [
+          "Damage dealt on bosses"
+        ]
+      },
+      "stat_priority": [
+        "CD%",
+        "CR%",
+        "ATK%",
+        "HP%"
+      ],
+      "required_caps": {
+        "pt": {
+          "CR%_min": 85,
+          "CD%_min": 160,
+          "HP%_min": 80
+        },
+        "en": {
+          "CR%_min": 85,
+          "CD%_min": 160,
+          "HP%_min": 80
+        }
+      },
+      "status_maximos_exigidos": {
+        "CR%": 100,
+        "CD%": 240,
+        "HP%": 200
+      }
+    },
+    {
+      "id": "nb12-farmer",
+      "role": [
+        "Dungeon",
+        "NB12"
+      ],
+      "name": {
+        "en": "NB12 Speed Farmer",
+        "pt": "NB12 Farme Rápido"
+      },
+      "description": {
+        "en": "Optimized for Necropolis B12 speed teams.",
+        "pt": "Otimizado para times rápidos na Necrópole B12."
+      },
+      "game_modes": [
+        "Dungeon"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Rage"
+        ],
+        "secondary_sets": [
+          "Blade",
+          "Will"
+        ],
+        "slot246": [
+          "ATK%",
+          "CR%",
+          "CD%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Attack"
+        ],
+        "focus": [
+          "Damage on debuffed enemies"
+        ]
+      },
+      "stat_priority": [
+        "SPD",
+        "CR%",
+        "CD%",
+        "ATK%"
+      ],
+      "required_caps": {
+        "pt": {
+          "SPD_min": 150,
+          "CR%_min": 85,
+          "CD%_min": 160
+        },
+        "en": {
+          "SPD_min": 150,
+          "CR%_min": 85,
+          "CD%_min": 160
+        }
+      },
+      "status_maximos_exigidos": {
+        "SPD": 250,
+        "CR%": 100,
+        "CD%": 240
+      }
+    },
+    {
+      "id": "toa-controller",
+      "role": [
+        "ToA/ToAH",
+        "Control"
+      ],
+      "name": {
+        "en": "ToA Controller",
+        "pt": "Controlador de ToA"
+      },
+      "description": {
+        "en": "High ACC and survivability for ToA control.",
+        "pt": "Alta precisão e sobrevivência para controle no ToA."
+      },
+      "game_modes": [
+        "Dungeon"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Despair",
+          "Swift"
+        ],
+        "secondary_sets": [
+          "Focus"
+        ],
+        "slot246": [
+          "SPD",
+          "HP%",
+          "ACC%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "Support"
+        ],
+        "focus": [
+          "Skill 2 Accuracy"
+        ]
+      },
+      "stat_priority": [
+        "ACC",
+        "SPD",
+        "HP%"
+      ],
+      "required_caps": {
+        "pt": {
+          "ACC_min": 85,
+          "SPD_min": 220,
+          "HP%_min": 80
+        },
+        "en": {
+          "ACC_min": 85,
+          "SPD_min": 220,
+          "HP%_min": 80
+        }
+      },
+      "status_maximos_exigidos": {
+        "ACC": 100,
+        "SPD": 310,
+        "HP%": 200
+      }
+    },
+    {
+      "id": "anti-cleave",
+      "role": [
+        "Anti-Cleave",
+        "Bruiser"
+      ],
+      "name": {
+        "en": "Anti-Cleave Core",
+        "pt": "Núcleo Anti-Cleave"
+      },
+      "description": {
+        "en": "Survive first turn and punish; heavy RES and EHP.",
+        "pt": "Sobreviver ao primeiro turno e punir; muito RES e EHP."
+      },
+      "game_modes": [
+        "RTA",
+        "Arena",
+        "Siege"
+      ],
+      "runes": {
+        "primary_sets": [
+          "Violent",
+          "Vampire"
+        ],
+        "secondary_sets": [
+          "Will",
+          "Nemesis",
+          "Destroy"
+        ],
+        "slot246": [
+          "HP%",
+          "HP%",
+          "RES%"
+        ]
+      },
+      "artifacts": {
+        "type": [
+          "HP"
+        ],
+        "focus": [
+          "DMG reduction from Fire/Water/Wind"
+        ]
+      },
+      "stat_priority": [
+        "RES",
+        "HP%",
+        "DEF%"
+      ],
+      "required_caps": {
+        "pt": {
+          "RES_min": 100,
+          "HP%_min": 140,
+          "DEF%_min": 70
+        },
+        "en": {
+          "RES_min": 100,
+          "HP%_min": 140,
+          "DEF%_min": 70
+        }
+      },
+      "status_maximos_exigidos": {
+        "RES": 100,
+        "HP%": 240,
+        "DEF%": 150
+      }
+    }
+  ],
+  "notes": {
+    "en": "All presets include bilingual name/description and per-preset required caps (status_maximos_exigidos). Adjust targets for your box/meta as needed.",
+    "pt": "Todos os presets têm nome/descrição bilíngue e metas mínimas por preset (status_maximos_exigidos). Ajuste conforme sua box/meta."
+  }
+};
+
+export default PRESETS_BUNDLE;

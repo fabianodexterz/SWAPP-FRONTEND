@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities { .shadow-card { box-shadow: 0 12px 40px rgba(0,0,0,0.35);}}
+@layer components {
+  :root { --brand-gold:#d9c08a; }
+  body { @apply bg-[#0c0f14] text-[#e5e7eb]; }
+  .card { @apply bg-[#121622] rounded-2xl shadow-card border border-[#232636]; }
+  .btn-primary { @apply bg-[var(--brand-gold)] text-black hover:opacity-90 rounded-xl; }
+  .btn-ghost { @apply rounded-xl; }
+  .input, .select, .textarea { @apply bg-[#0c0f14] border-[#2a2e3f] rounded-xl; }
+  .tile { @apply card p-6 hover:scale-[1.01] transition-transform; }
+  .k { @apply text-xs uppercase tracking-wide text-[#9aa0ab]; }
+  .pill { @apply px-2 py-0.5 rounded-full text-xs border border-[#232636] bg-black/20; }
+  .badge-score { @apply px-3 py-1 rounded-xl font-semibold; }
+  .badge-blue { @apply bg-blue-900/30 text-blue-200; }
+  .badge-green { @apply bg-emerald-900/30 text-emerald-200; }
+  .badge-amber { @apply bg-amber-900/30 text-amber-200; }
+  .table { @apply w-full text-sm; }
+  .table th { @apply text-left k pb-2; }
+  .table td { @apply py-2 border-t border-[#232636]; }
+  .progress-wrap { @apply h-2 w-full bg-[#1a1f2e] rounded-full overflow-hidden; }
+  .progress-bar { @apply h-full bg-[var(--brand-gold)] transition-all; }
+}

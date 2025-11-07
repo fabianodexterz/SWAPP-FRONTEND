@@ -1,0 +1,21 @@
+@"
+node_modules/
+.next/
+out/
+dist/
+build/
+
+.env
+.env.*
+!.env.example
+
+.DS_Store
+.vscode/
+.idea/
+.vercel/
+npm-debug.log*
+yarn-*.log*
+pnpm-debug.log*
+"@ | Out-File -Encoding UTF8 .gitignore
+
+git rm -r --cached . 2>$null

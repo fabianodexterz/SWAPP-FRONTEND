@@ -1,0 +1,33 @@
+
+:root{
+  --sw-gold:#e9c46a; --sw-gold-2:#f4d389; --sw-amber:#f2c94c;
+  --sw-chip:#1f1a14; --sw-chip-border:#4a3a28;
+}
+.sw-card{background:linear-gradient(180deg,rgba(58,42,25,.85),rgba(42,30,19,.85));
+  border:1px solid rgba(233,196,106,.2);border-radius:14px;
+  box-shadow:0 6px 18px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);}
+.sw-title{font-weight:600;letter-spacing:.3px;color:var(--sw-gold-2);text-shadow:0 1px 0 #000;}
+.sw-chip{padding:.22rem .6rem;background:var(--sw-chip);border:1px solid var(--sw-chip-border);
+  border-radius:999px;color:#ddd;font-size:.8rem;display:inline-flex;align-items:center;gap:.4rem;}
+.sw-chip.gold{background:#4b3a22;border-color:#876633;color:var(--sw-gold-2);}
+.sw-chip .star{color:var(--sw-amber);}
+.monster-sheet{display:grid;grid-template-columns:140px 1fr;gap:1.2rem;}
+.monster-sheet .portrait{width:140px;height:140px;border-radius:18px;overflow:hidden;
+  border:1px solid rgba(233,196,106,.25);box-shadow:0 8px 18px rgba(0,0,0,.35);}
+.section{margin-top:1.25rem;}
+.section h3{color:var(--sw-gold-2);font-weight:600;margin-bottom:.6rem;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem;}
+.stat-box{background:#1b1510;border:1px solid rgba(233,196,106,.18);border-radius:10px;padding:.6rem .8rem;color:#eee;}
+.skill-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;}
+.skill-card{display:flex;gap:.75rem;background:#1b1510;border:1px solid rgba(233,196,106,.18);
+  border-radius:12px;padding:.8rem;}
+.skill-card img{width:48px;height:48px;border-radius:10px;border:1px solid rgba(233,196,106,.25);}
+.awk-grid{display:flex;flex-wrap:wrap;gap:.5rem;}
+.awk-pill{background:#1b1510;border:1px solid rgba(233,196,106,.18);border-radius:999px;color:#ddd;padding:.4rem .65rem;}
+.el-chip{border-radius:999px;color:#fff;font-weight:500;padding:.18rem .6rem;display:inline-flex;align-items:center;gap:.45rem;border:1px solid rgba(255,255,255,.14);background:#111;}
+.el-chip img{width:18px;height:18px;}
+.el-fire { box-shadow:0 0 0 1px rgba(255,86,48,.25), 0 0 12px rgba(255,86,48,.25) inset; }
+.el-water{ box-shadow:0 0 0 1px rgba(72,162,255,.25),0 0 12px rgba(72,162,255,.25) inset; }
+.el-wind { box-shadow:0 0 0 1px rgba(88,214,141,.25),0 0 12px rgba(88,214,141,.25) inset; }
+.el-light{ box-shadow:0 0 0 1px rgba(255,255,195,.25),0 0 12px rgba(255,255,195,.25) inset; color:#222;}
+.el-dark { box-shadow:0 0 0 1px rgba(150,120,255,.25),0 0 12px rgba(150,120,255,.25) inset; }

@@ -1,0 +1,3 @@
+/* src/styles/optimizer.css
+   Pequenos ajustes visuais caso não use tokens do tailwind. */
+.tabular-nums { font-variant-numeric: tabular-nums; }
