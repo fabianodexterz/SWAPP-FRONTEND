@@ -1,19 +1,30 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+// middleware.ts
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get('swapp_token')?.value
-  const pathname = req.nextUrl.pathname
-  const protectedRoutes = ['/monsters', '/profile']
+  const { pathname } = req.nextUrl;
 
-  if (protectedRoutes.some(p => pathname.startsWith(p)) && !token) {
-    const url = req.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
+  const isStatic =
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/assets') ||
+    pathname.startsWith('/images') ||
+    pathname.startsWith('/icons') ||
+    pathname === '/favicon.ico' ||
+    pathname === '/robots.txt' ||
+    pathname === '/sitemap.xml';
+
+  if (isStatic) return NextResponse.next();
+
+  if (pathname === '/' || pathname === '') {
+    const url = req.nextUrl.clone();
+    url.pathname = '/login';
+    return NextResponse.redirect(url);
   }
-  return NextResponse.next()
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/monsters/:path*', '/profile'],
-}
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|assets|images|icons).*)'],
+};
