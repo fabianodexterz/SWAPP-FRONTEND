@@ -1,73 +1,63 @@
-"use client";
-import { useCallback, useState } from "react";
+// =====================================================
+// src/hooks/useAtbSimulator.ts
+// Hook "stub" (desativado) para o simulador de ATB.
+// Mantém a API esperada e evita quebras no build.
+// =====================================================
 
-type Unit = {
-  id: string;
-  name?: string;
-  baseSpd: number;
-  speedPct?: number;
-  flatSpd?: number;
-  startAtb?: number;
-  team?: "ally" | "enemy";
-  priority?: number;
+import { useCallback, useState } from 'react';
+
+type UseAtbReturn = {
+  enabled: boolean;
+  setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+
+  // API esperada pelo painel
+  run: (...args: any[]) => Promise<void>;
+  reset: () => void;
+  data: any;
+  loading: boolean;
+  error: string | null;
+
+  log: string[];
 };
 
-type Options = {
-  bonuses?: {
-    leaderPct?: number;
-    towerPct?: number;
-    setSwift?: boolean;
-    otherPct?: number;
-    flat?: number;
-  };
-  leo?: { enabled: boolean; leoSpeed: number };
-  turnCap?: number;
-  epsilon?: number;
-  logSteps?: boolean;
-};
-
-export function useAtbSimulator(apiPath = "/api/simulate-atb") {
+export function useAtbSimulator(_endpoint?: string): UseAtbReturn {
+  const [enabled, setEnabled] = useState(false);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [data, setData] = useState<any>(null);
 
-  const run = useCallback(
-    async (units: Unit[], options?: Options) => {
-      setLoading(true);
-      setError(null);
+  const log = [
+    '⚙️ Simulador de ATB está desativado nesta versão.',
+    '🔒 Quando ativado, permitirá simular barras de turno e ordem de ação.',
+  ];
+
+  const run = useCallback(async () => {
+    setLoading(true);
+    try {
+      console.warn('[useAtbSimulator] run() chamado – recurso desativado.');
+      setError('Simulador de ATB desativado temporariamente.');
       setData(null);
+      await new Promise((r) => setTimeout(r, 150));
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-      try {
-        const res = await fetch(apiPath, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ units, options }),
-        });
+  const reset = useCallback(() => {
+    setData(null);
+    setError(null);
+  }, []);
 
-        // 🔥 Se o backend retornar HTML, força erro legível
-        const contentType = res.headers.get("content-type") || "";
-        if (!contentType.includes("application/json")) {
-          const text = await res.text();
-          throw new Error(
-            `Resposta inválida do servidor (${res.status}): ${text.slice(0, 100)}`
-          );
-        }
-
-        const json = await res.json();
-        if (!res.ok) throw new Error(json?.error || "Falha na simulação");
-
-        setData(json);
-        return json;
-      } catch (e: any) {
-        const msg = e?.message ?? "Erro desconhecido";
-        setError(msg);
-        return null;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [apiPath]
-  );
-
-  return { run, loading, error, data };
+  return {
+    enabled,
+    setEnabled,
+    run,
+    reset,
+    data,
+    loading,
+    error,
+    log,
+  };
 }
+
+export default useAtbSimulator;

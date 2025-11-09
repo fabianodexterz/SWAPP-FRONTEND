@@ -1,22 +1,47 @@
+// src/App.tsx
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import { Api } from '@/lib/api';
+import { useToastStore } from '@/store/toast';
 
+/**
+ * Pequena sonda de saúde do backend.
+ * Renderiza nada; apenas verifica /health e dispara toast.
+ */
 export default function App() {
-  const [ok, setOk] = useState(null);
+  const [ok, setOk] = useState<boolean | null>(null);
+  const { addToast } = useToastStore();
 
   useEffect(() => {
-    Api.get('/health', {}) // 2º argumento para tipagens rígidas
-      .then((h) => setOk(!!h.ok))
-      .catch(() => setOk(false));
-  }, []);
+    let mounted = true;
 
-  return (
-    <div className="p-6 text-sm text-[#e8e6e3]">
-      <div className="opacity-70">Backend status:</div>
-      <div className="mt-1 font-semibold">
-        {ok === null ? 'checando…' : ok ? 'OK' : 'OFFLINE'}
-      </div>
-    </div>
-  );
+    (async () => {
+      try {
+        // CHAME A FUNÇÃO Api DIRETAMENTE (não existe Api.get)
+        const h = await Api<{ ok: boolean }>('/health');
+
+        if (!mounted) return;
+
+        setOk(!!h?.ok);
+
+        if (h?.ok) {
+          addToast('Backend conectado com sucesso!', 'success');
+        } else {
+          addToast('Backend fora do ar', 'error');
+        }
+      } catch (_) {
+        if (!mounted) return;
+        setOk(false);
+        addToast('Não foi possível contatar o backend.', 'error');
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [addToast]);
+
+  // Não precisa renderizar nada
+  return null;
 }

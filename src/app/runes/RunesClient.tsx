@@ -1,37 +1,88 @@
-"use client";
+'use client';
 
-import { useMemo, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import React, { useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { themeTokens as ui } from '../theme';
 
-export default function RunesClient() {
+type Runa = {
+  id: number;
+  set: string;
+  slot: 1 | 2 | 3 | 4 | 5 | 6;
+  main: string;
+  substats: string[];
+};
+
+type Props = {
+  items?: Runa[]; // opcional: você pode injetar as runas via props
+};
+
+const MOCK: Runa[] = [
+  { id: 1, set: 'Violent', slot: 2, main: 'SPD +42',     substats: ['CRI 9%', 'CDMG 12%', 'HP 7%'] },
+  { id: 2, set: 'Will',    slot: 4, main: 'CDMG +80%',   substats: ['ATK 8%', 'SPD 12', 'ACC 10%'] },
+  { id: 3, set: 'Swift',   slot: 6, main: 'HP +63%',     substats: ['RES 12%', 'DEF 8%', 'SPD 7'] },
+];
+
+export default function RunesClient({ items = MOCK }: Props) {
   const router = useRouter();
-  const sp = useSearchParams();
-  const slotInit = sp.get("slot") ?? "all";
-  const setInit = sp.get("set") ?? "all";
+  const params = useSearchParams();
 
-  const [slot, setSlot] = useState(slotInit);
-  const [setType, setSetType] = useState(setInit);
+  const [q, setQ] = useState<string>(params.get('q') ?? '');
+  const [slot, setSlot] = useState<number | 'all'>(
+    (params.get('slot') ? Number(params.get('slot')) : 'all') as number | 'all'
+  );
+  const [setName, setSetName] = useState<string>(params.get('set') ?? '');
 
-  const qp = useMemo(() => {
-    const p = new URLSearchParams();
-    if (slot !== "all") p.set("slot", slot);
-    if (setType !== "all") p.set("set", setType);
-    return p.toString();
-  }, [slot, setType]);
+  // Atualiza URL quando filtros mudam (opcional)
+  const updateUrl = (nextQ = q, nextSlot = slot, nextSet = setName) => {
+    const sp = new URLSearchParams();
+    if (nextQ) sp.set('q', nextQ);
+    if (nextSlot !== 'all') sp.set('slot', String(nextSlot));
+    if (nextSet) sp.set('set', nextSet);
+    router.replace(`?${sp.toString()}`);
+  };
 
-  function apply() {
-    const s = qp ? `?${qp}` : "";
-    router.push(`/runes${s}`);
-  }
+  const list = useMemo(() => {
+    const s = q.toLowerCase().trim();
+    return items.filter((r) => {
+      const okQ =
+        !s ||
+        r.set.toLowerCase().includes(s) ||
+        r.main.toLowerCase().includes(s) ||
+        r.substats.some((t) => t.toLowerCase().includes(s));
+      const okSlot = slot === 'all' || r.slot === slot;
+      const okSet = !setName || r.set.toLowerCase().includes(setName.toLowerCase());
+      return okQ && okSlot && okSet;
+    });
+  }, [items, q, slot, setName]);
 
   return (
-    <div className="space-y-6">
-      <p className="text-sm text-amber-400">
-        UI nova desativada via flag. Habilite com <code>NEXT_PUBLIC_FLAGS=newRunesUI</code>
-      </p>
-      <div className="flex flex-col md:flex-row gap-3">
-        <select value={slot} onChange={e => setSlot(e.target.value)} className="bg-zinc-900 rounded px-3 py-2">
-          <option value="all">Slot Todos</option>
+    <section
+      className="rounded-xl border p-6 space-y-5"
+      style={{ background: ui.bg.panel, borderColor: ui.border.base }}
+    >
+      {/* Filtros */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <input
+          className="input w-full"
+          placeholder="Buscar por set / main / sub"
+          value={q}
+          onChange={(e) => {
+            const v = e.target.value;
+            setQ(v);
+            updateUrl(v, slot, setName);
+          }}
+        />
+
+        <select
+          className="input w-full"
+          value={slot}
+          onChange={(e) => {
+            const val = e.target.value === 'all' ? 'all' : (Number(e.target.value) as 1 | 2 | 3 | 4 | 5 | 6);
+            setSlot(val);
+            updateUrl(q, val, setName);
+          }}
+        >
+          <option value="all">Todos os slots</option>
           <option value="1">Slot 1</option>
           <option value="2">Slot 2</option>
           <option value="3">Slot 3</option>
@@ -39,19 +90,53 @@ export default function RunesClient() {
           <option value="5">Slot 5</option>
           <option value="6">Slot 6</option>
         </select>
-        <select value={setType} onChange={e => setSetType(e.target.value)} className="bg-zinc-900 rounded px-3 py-2">
-          <option value="all">Todos</option>
-          <option value="swift">Swift</option>
-          <option value="fatal">Fatal</option>
-          <option value="violent">Violent</option>
-          <option value="rage">Rage</option>
-        </select>
-        <button onClick={apply} className="bg-blue-600 hover:bg-blue-500 rounded px-4 py-2">Aplicar</button>
+
+        <input
+          className="input w-full"
+          placeholder="Filtro por Set (ex.: Violent)"
+          value={setName}
+          onChange={(e) => {
+            const v = e.target.value;
+            setSetName(v);
+            updateUrl(q, slot, v);
+          }}
+        />
       </div>
-      <p className="text-zinc-400">
-        Conecte esta página à rota <code>/api/runes</code> quando a API estiver pronta. Mantive isolado para não
-        quebrar nada do que existe.
-      </p>
-    </div>
+
+      {/* Lista */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {list.map((r) => (
+          <div
+            key={r.id}
+            className="rounded-lg border p-4"
+            style={{ background: ui.bg.card, borderColor: ui.border.base }}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm uppercase tracking-wide opacity-80">{r.set}</span>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{ background: ui.badge.bg, color: ui.badge.fg }}
+              >
+                Slot {r.slot}
+              </span>
+            </div>
+
+            <div className="mt-2 font-medium">{r.main}</div>
+
+            <ul className="mt-3 space-y-1 text-sm opacity-90">
+              {r.substats.map((s, i) => (
+                <li key={i}>• {s}</li>
+              ))}
+            </ul>
+
+            <button className="btn mt-4 w-full">Detalhes</button>
+          </div>
+        ))}
+      </div>
+
+      {list.length === 0 && (
+        <div className="text-center text-sm opacity-70">Nenhuma runa encontrada.</div>
+      )}
+    </section>
   );
 }

@@ -1,52 +1,74 @@
-'use client'
-import { useEffect, useState, useCallback } from 'react'
-import { API_URL } from '@/lib/api'
+// src/hooks/useAuth.ts
+'use client';
 
-type LoginPayload = { email: string; password: string }
-type LoginResponse = { token: string }
+import { useEffect, useState, useCallback } from 'react';
+import { Api } from '@/lib/api';
+
+type LoginPayload = { email: string; password: string };
+type LoginResponse = { token: string };
 
 export function useAuth() {
-  const [token, setToken] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
+  // carrega token salvo no client
   useEffect(() => {
-    const ck = typeof document !== 'undefined'
-      ? document.cookie.split('; ').find(c => c.startsWith('swapp_token=')) : null;
-    const fromCookie = ck ? decodeURIComponent(ck.split('=')[1]) : null;
-    const fromLS = typeof window !== 'undefined' ? localStorage.getItem('swapp_token') : null;
-    setToken(fromCookie || fromLS)
-    setLoading(false)
-  }, [])
-
-  const login = useCallback(async ({ email, password }: LoginPayload) => {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-      credentials: 'include',
-    })
-    if (!res.ok) {
-      let text = 'Login inválido'
-      try { const j = await res.json(); if (j?.error) text = j.error } catch {}
-      throw new Error(text)
+    if (typeof window !== 'undefined') {
+      const saved = window.localStorage.getItem('swapp_token');
+      if (saved) setToken(saved);
     }
-    const data = await res.json() as LoginResponse
-    const t = data.token
-    const maxAge = 60 * 60 * 24 * 7
-    if (typeof document !== 'undefined')
-      document.cookie = `swapp_token=${encodeURIComponent(t)}; path=/; max-age=${maxAge}`
-    if (typeof window !== 'undefined') localStorage.setItem('swapp_token', t)
-    setToken(t)
-    return t
-  }, [])
+  }, []);
 
-  const logout = useCallback(() => {
-    if (typeof document !== 'undefined')
-      document.cookie = 'swapp_token=; path=/; max-age=0'
-    if (typeof window !== 'undefined') localStorage.removeItem('swapp_token')
-    setToken(null)
-    fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {})
-  }, [])
+  const login = useCallback(async (payload: LoginPayload) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await Api<LoginResponse>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      if (res?.token) {
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem('swapp_token', res.token);
+        }
+        setToken(res.token);
+        return true;
+      }
+      setError('Falha ao autenticar.');
+      return false;
+    } catch (e: any) {
+      setError(e?.message ?? 'Erro ao autenticar.');
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-  return { token, loading, login, logout }
+  const logout = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Se sua API tiver endpoint de logout, pode chamar aqui:
+      // await Api('/auth/logout', { method: 'POST' }).catch(() => {});
+    } finally {
+      if (typeof window !== 'undefined') {
+        window.localStorage.removeItem('swapp_token');
+      }
+      setToken(null);
+      setLoading(false);
+    }
+  }, []);
+
+  return {
+    token,
+    isAuthenticated: !!token,
+    loading,
+    error,
+    login,
+    logout,
+    setError,
+  };
 }
+
+export default useAuth;

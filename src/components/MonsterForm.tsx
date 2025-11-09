@@ -1,64 +1,170 @@
-// src/components/MonsterForm.tsx
-import { useState } from 'react';
-import { monstersApi } from '@/services/monsters';
+// =====================================================
+// src/components/MonsterForm.tsx — Formulário completo
+// =====================================================
 
-export default function MonsterForm({ onCreated }: { onCreated?: () => void }) {
-  const [form, setForm] = useState({
+'use client';
+
+import React, { useState } from 'react';
+import { monstersApi, MonsterElement } from '@/lib/api';
+
+type FormState = {
+  swarfarmId?: string;
+  name: string;
+  element: MonsterElement | '';
+  natStars?: string;
+  archetype?: string;
+  awakened?: boolean;
+  portraitUrl?: string;
+};
+
+type Props = {
+  onSuccess?: () => void;
+};
+
+export default function MonsterForm({ onSuccess }: Props) {
+  const [busy, setBusy] = useState(false);
+  const [form, setForm] = useState<FormState>({
     swarfarmId: '',
     name: '',
-    element: 'Fire',
-    archetype: 'Attacker',
-    natStars: '4',
-    awakened: 'true',
-    iconURL: '',
+    element: '',
+    natStars: '6',
+    archetype: '',
+    awakened: false,
+    portraitUrl: '',
   });
-  const [busy, setBusy] = useState(false);
 
-  function set<K extends keyof typeof form>(k: K, v: string) {
-    setForm((f) => ({ ...f, [k]: v }));
-  }
+  const handleChange =
+    (k: keyof FormState) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const v =
+        e.currentTarget.type === 'checkbox'
+          ? (e.currentTarget as HTMLInputElement).checked
+          : e.currentTarget.value;
+      setForm((old) => ({ ...old, [k]: v as any }));
+    };
 
-  async function submit(e: React.FormEvent) {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.name || !form.element) return;
     setBusy(true);
     try {
       await monstersApi.create({
-        swarfarmId: Number(form.swarfarmId),
+        swarfarmId:
+          form.swarfarmId && form.swarfarmId.trim() !== ''
+            ? Number(form.swarfarmId)
+            : null,
         name: form.name,
-        element: form.element,
-        archetype: form.archetype,
-        natStars: Number(form.natStars),
-        awakened: form.awakened === 'true',
-        iconURL: form.iconURL || undefined,
+        element: form.element as MonsterElement,
+        natStars:
+          form.natStars && form.natStars.trim() !== ''
+            ? Number(form.natStars)
+            : 6,
+        archetype: form.archetype?.trim() || null,
+        awakened: !!form.awakened,
+        portraitUrl: form.portraitUrl?.trim() || null,
       });
-      alert('Criado!');
-      onCreated?.();
-      // limpa alguns campos
-      setForm((f) => ({ ...f, name: '', iconURL: '' }));
-    } catch (e: any) {
-      alert(e.message || 'Falha ao criar');
+
+      onSuccess?.();
+
+      setForm({
+        swarfarmId: '',
+        name: '',
+        element: '',
+        natStars: '6',
+        archetype: '',
+        awakened: false,
+        portraitUrl: '',
+      });
     } finally {
       setBusy(false);
     }
-  }
+  };
 
   return (
-    <form onSubmit={submit} style={{ display: 'grid', gap: 8, gridTemplateColumns: 'repeat(6, 1fr)', marginBottom: 12 }}>
-      <input placeholder="swarfarmId" value={form.swarfarmId} onChange={(e) => set('swarfarmId', e.target.value)} required />
-      <input placeholder="name" value={form.name} onChange={(e) => set('name', e.target.value)} required />
-      <select value={form.element} onChange={(e) => set('element', e.target.value)}>
-        <option>Fire</option><option>Water</option><option>Wind</option><option>Light</option><option>Dark</option>
-      </select>
-      <input placeholder="archetype" value={form.archetype} onChange={(e) => set('archetype', e.target.value)} />
-      <select value={form.natStars} onChange={(e) => set('natStars', e.target.value)}>
-        <option>3</option><option>4</option><option>5</option><option>6</option>
-      </select>
-      <select value={form.awakened} onChange={(e) => set('awakened', e.target.value)}>
-        <option value="true">Awakened ✓</option>
-        <option value="false">Not Awakened</option>
-      </select>
-      <input placeholder="iconURL (opcional)" value={form.iconURL} onChange={(e) => set('iconURL', e.target.value)} style={{ gridColumn: '1 / span 5' }} />
-      <button disabled={busy} style={{ gridColumn: '6 / span 1' }}>{busy ? 'Salvando…' : 'Criar'}</button>
+    <form onSubmit={submit} className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        <label className="flex flex-col gap-1">
+          <span className="text-sm opacity-80">Swarfarm ID</span>
+          <input
+            className="input"
+            value={form.swarfarmId}
+            onChange={handleChange('swarfarmId')}
+            placeholder="ex: 12345"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1">
+          <span className="text-sm opacity-80">Nome</span>
+          <input
+            className="input"
+            value={form.name}
+            onChange={handleChange('name')}
+            placeholder="ex: Veromos"
+            required
+          />
+        </label>
+
+        <label className="flex flex-col gap-1">
+          <span className="text-sm opacity-80">Elemento</span>
+          <select
+            className="input"
+            value={form.element}
+            onChange={handleChange('element')}
+            required
+          >
+            <option value="">Selecione…</option>
+            <option value="Fire">Fire</option>
+            <option value="Water">Water</option>
+            <option value="Wind">Wind</option>
+            <option value="Light">Light</option>
+            <option value="Dark">Dark</option>
+          </select>
+        </label>
+
+        <label className="flex flex-col gap-1">
+          <span className="text-sm opacity-80">Nat. Stars</span>
+          <input
+            className="input"
+            value={form.natStars}
+            onChange={handleChange('natStars')}
+            placeholder="6"
+            inputMode="numeric"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1">
+          <span className="text-sm opacity-80">Arquetipo</span>
+          <input
+            className="input"
+            value={form.archetype}
+            onChange={handleChange('archetype')}
+            placeholder="Support / Attack / Defense"
+          />
+        </label>
+
+        <label className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={!!form.awakened}
+            onChange={handleChange('awakened')}
+          />
+          <span>Awakened</span>
+        </label>
+
+        <label className="flex flex-col gap-1 col-span-2">
+          <span className="text-sm opacity-80">Portrait URL</span>
+          <input
+            className="input"
+            value={form.portraitUrl}
+            onChange={handleChange('portraitUrl')}
+            placeholder="https://..."
+          />
+        </label>
+      </div>
+
+      <button className="btn w-full" disabled={busy}>
+        {busy ? 'Salvando…' : 'Criar Monstro'}
+      </button>
     </form>
   );
 }
