@@ -52,7 +52,7 @@ export default function RuneCard({ rune }: { rune: Rune }) {
           </div>
         </div>
         <div className="text-right">
-          <div className="text-xs text-zinc-400">Nível</div>
+          <div className="text-xs text-zinc-400">NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­vel</div>
           <div className="text-base font-semibold text-zinc-200">+{rune.level}</div>
         </div>
       </div>
@@ -75,7 +75,7 @@ export default function RuneCard({ rune }: { rune: Rune }) {
       <div className="mt-3 flex items-center justify-between text-xs text-zinc-400">
         <div>Grade: <span className="font-semibold text-zinc-300">{rune.grade}</span></div>
         {typeof rune.efficiency === "number" && (
-          <div>Eficiência: <span className="font-semibold text-zinc-300">{rune.efficiency.toFixed(1)}%</span></div>
+          <div>EficiÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âªncia: <span className="font-semibold text-zinc-300">{rune.efficiency.toFixed(1)}%</span></div>
         )}
       </div>
     </div>

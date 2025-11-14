@@ -23,7 +23,7 @@ export default function FiltersBar({ onApply, onClear, initial }: Props) {
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Nome, elemento, arquétipo"
+          placeholder="Nome, elemento, arquÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©tipo"
           className="col-span-2 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-600 sm:col-span-2"
         />
 
@@ -59,7 +59,7 @@ export default function FiltersBar({ onApply, onClear, initial }: Props) {
         >
           <option value="any">Awakened?</option>
           <option value="true">Sim</option>
-          <option value="false">Não</option>
+          <option value="false">NÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o</option>
         </select>
 
         <div className="col-span-2 flex gap-2 sm:col-span-2 sm:justify-end">

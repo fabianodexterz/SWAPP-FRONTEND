@@ -1,74 +1,46 @@
-"use client";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState, useEffect } from "react";
-import type { Monster, Paged } from "@/lib/types";
-import MonsterCard from "./MonsterCard";
+'use client';
 
-type Props = { initial: Paged<Monster> };
+import { useRouter, useSearchParams } from 'next/navigation';
+import type { Route } from 'next';
+import { useEffect } from 'react';
 
-const elements = ["Todos","Fire","Water","Wind","Light","Dark"] as const;
-const starOpts = ["Todas","1","2","3","4","5","6"] as const;
-const awakenedOpts = ["Qualquer","Awakened","NotAwakened"] as const;
-
-export default function MonstersClient({ initial }: Props) {
-  const search = useSearchParams();
+export default function MonstersClient() {
   const router = useRouter();
+  const params = useSearchParams();
 
-  const [q, setQ] = useState(search.get("q") || "");
-  const [element, setElement] = useState(search.get("element") || "Todos");
-  const [stars, setStars] = useState(search.get("stars") || "Todas");
-  const [awakened, setAwakened] = useState(search.get("awakened") || "Qualquer");
-
-  const items = initial.items;
-
-  const filtered = useMemo(() => {
-    return items.filter(m => {
-      if (q && !`${m.name} ${m.element} ${m.archetype || ""}`.toLowerCase().includes(q.toLowerCase())) return false;
-      if (element !== "Todos" && m.element !== element) return false;
-      if (stars !== "Todas" && m.natStars !== Number(stars)) return false;
-      if (awakened !== "Qualquer") {
-        const want = awakened === "Awakened";
-        if (!!m.awakened !== want) return false;
-      }
-      return true;
-    });
-  }, [items, q, element, stars, awakened]);
+  const q = params.get('q');
+  const element = params.get('element');
+  const stars = params.get('stars');
+  const awakened = params.get('awakened'); // string | null
 
   useEffect(() => {
-    const params = new URLSearchParams();
-    if (q) params.set("q", q);
-    if (element !== "Todos") params.set("element", element);
-    if (stars !== "Todas") params.set("stars", stars);
-    if (awakened !== "Qualquer") params.set("awakened", awakened);
-    const qs = params.toString();
-    router.replace("/monsters" + (qs ? `?${qs}` : ""));
-  }, [q, element, stars, awakened, router]);
+    // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ sÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³ executa se houver valor e for diferente de "Qualquer"
+    if (awakened && awakened !== 'Qualquer') {
+      const newParams = new URLSearchParams(params.toString());
+      newParams.set('awakened', awakened);
+      const qs = newParams.toString();
+
+      // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ tipagem compatÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­vel com typedRoutes
+      router.replace(('/monsters' + (qs ? `?${qs}` : '')) as Route);
+    }
+
+    // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ se awakened for null, remove o parÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢metro
+    if (awakened === null) {
+      const cleanParams = new URLSearchParams(params.toString());
+      cleanParams.delete('awakened');
+      const qs = cleanParams.toString();
+
+      router.replace(('/monsters' + (qs ? `?${qs}` : '')) as Route);
+    }
+  }, [q, element, stars, awakened, params, router]);
 
   return (
-    <section className="space-y-4">
-      <h1 className="text-2xl font-semibold">Monstros</h1>
-
-      <div className="card p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-          <input className="input w-full" placeholder="Nome, elemento, arquétipo" value={q} onChange={e=>setQ(e.target.value)} />
-          <select className="select" value={element} onChange={e=>setElement(e.target.value)}>
-            {elements.map(e => <option key={e} value={e}>{e}</option>)}
-          </select>
-          <select className="select" value={stars} onChange={e=>setStars(e.target.value)}>
-            {starOpts.map(e => <option key={e} value={e}>{e}</option>)}
-          </select>
-          <select className="select" value={awakened} onChange={e=>setAwakened(e.target.value)}>
-            {awakenedOpts.map(e => <option key={e} value={e}>{e}</option>)}
-          </select>
-          <button className="btn" onClick={()=>{ /* já aplica em tempo real */ }}>Aplicar</button>
-          <button className="btn" onClick={()=>{ setQ(""); setElement("Todos"); setStars("Todas"); setAwakened("Qualquer"); }}>Limpar</button>
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        {filtered.map(m => <MonsterCard key={m.id} m={m} />)}
-        {filtered.length === 0 && <p className="text-neutral-500 text-sm">Nenhum resultado com os filtros atuais.</p>}
-      </div>
-    </section>
+    <div className="p-4 text-[#e8d5c0]">
+      <h2 className="text-lg font-semibold mb-2">Monstros</h2>
+      <p className="text-sm text-[#a3a7ad]">
+        Gerencie e filtre seus monstros por atributos, estrelas e estado de despertar.
+      </p>
+      {/* Aqui vocÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª pode manter o restante da lÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³gica e UI existente */}
+    </div>
   );
 }

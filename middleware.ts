@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Rotas que exigem login (ajuste conforme suas páginas)
+// Rotas que exigem login (ajuste conforme suas pÃ¡ginas)
 const PROTECTED = [
   '/dashboard',
   '/optimizer',
@@ -16,7 +16,7 @@ export function middleware(req: NextRequest) {
   const isProtected = PROTECTED.some((p) => pathname.startsWith(p));
   if (!isProtected) return NextResponse.next();
 
-  // Cookie simples de demonstração
+  // Cookie simples de demonstraÃ§Ã£o
   const hasAuth = req.cookies.get('auth')?.value === '1';
   if (hasAuth) return NextResponse.next();
 

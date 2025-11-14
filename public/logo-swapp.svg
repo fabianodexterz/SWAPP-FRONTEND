@@ -1,33 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="1024" height="256" viewBox="0 0 1024 256" xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="SWAPP">
   <defs>
-    <linearGradient id="gold" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#E8CF9B"/>
-      <stop offset="50%" stop-color="#CBB797"/>
-      <stop offset="100%" stop-color="#A88A61"/>
-    </linearGradient>
-    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-      <feGaussianBlur stdDeviation="6" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
+    <radialGradient id="bg" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#15161a"/>
+      <stop offset="100%" stop-color="#0b0b0f"/>
+    </radialGradient>
   </defs>
-
-  <!-- Background transparent -->
-
-  <!-- Emblem circle with ring -->
-  <g transform="translate(40,40)">
-    <circle cx="88" cy="88" r="80" fill="none" stroke="url(#gold)" stroke-width="6" filter="url(#softGlow)"/>
-    <path d="M88,24 L96,48 L120,52 L102,68 L106,92 L88,80 L70,92 L74,68 L56,52 L80,48 Z"
-          fill="url(#gold)" opacity="0.9" filter="url(#softGlow)"/>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <circle cx="256" cy="220" r="140" fill="none" stroke="#cbb797" stroke-width="10"/>
+  <g fill="#cbb797">
+    <path d="M256 120c40 50-20 60 10 96 12 14 36 17 36 40 0 26-22 44-46 44s-46-18-46-44c0-27 34-38 22-66-8-18-8-34 24-70z"/>
   </g>
-
-  <!-- Text SWAPP -->
-  <g transform="translate(200,55)">
-    <text x="0" y="110" font-family="Segoe UI, Inter, Roboto, Helvetica, Arial, sans-serif"
-          font-weight="900" font-size="140" fill="url(#gold)" filter="url(#softGlow)"
-          letter-spacing="4">SWAPP</text>
-  </g>
+  <text x="50%" y="420" text-anchor="middle" font-family="Verdana, Geneva, sans-serif" font-size="72" fill="#cbb797">SWAPP</text>
 </svg>

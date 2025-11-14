@@ -1,18 +1,29 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+/**
+ * SWAPP middleware: redireciona caminhos antigos (PT-BR) para os novos (EN).
+ * MantÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©m compatibilidade de links antigos apÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³s a limpeza de pastas.
+ */
 export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const url = req.nextUrl.clone();
 
-  if (pathname.startsWith('/auth/login')) {
-    const url = req.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
-  }
+  // Mapa de rotas antigas -> rotas novas
+  const routes: Record<string, string> = {
+    '/otimizador': '/optimizer',
+    '/runas': '/runes',
+    '/equipes': '/teams',
 
-  if (pathname.startsWith('/auth/register')) {
-    const url = req.nextUrl.clone();
-    url.pathname = '/register';
+    // Se alguÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©m acessar as antigas rotas aninhadas de auth:
+    '/auth/login': '/login',
+    '/auth/register': '/register',
+    '/auth/logout': '/logout',
+    '/auth/forgot': '/forgot',
+  };
+
+  const direct = routes[url.pathname];
+  if (direct) {
+    url.pathname = direct;
     return NextResponse.redirect(url);
   }
 
@@ -20,5 +31,11 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/auth/:path*'],
+  // Aplica middleware apenas quando necessÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡rio
+  matcher: [
+    '/otimizador',
+    '/runas',
+    '/equipes',
+    '/auth/:path*',
+  ],
 };

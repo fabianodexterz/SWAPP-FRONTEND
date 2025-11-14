@@ -1,191 +1,94 @@
-// src/app/presets/page.tsx
-'use client';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { use } from 'react';
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { fetchPresets, type Preset as ApiPreset } from '@/lib/api';
-import { useLang } from '@/store/lang';
-
-// -------- Tipos da UI (independentes do tipo da API) --------
-type UIPreset = {
-  id: string | number;
-  name: string;          // nome do preset
-  monsterName: string;   // nome do monstro
-  runeSets: string;      // ex.: "Violent, Will"
-  stats?: Record<string, number>;
-  locale: string;        // pt | en ...
+export const metadata: Metadata = {
+  title: 'SWAPP ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ Presets',
+  description: 'Presets de builds por modo de jogo. RTA disponÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­vel. Arena e Cairos em breve.',
 };
 
-type SortKey = 'name' | 'monsterName' | 'runeSets';
+type Preset = {
+  id: string;
+  title: string;
+  mode: 'RTA' | 'Arena' | 'Cairos';
+  tags: string[];
+  summary?: string;
+};
+
+async function getPresets(): Promise<Preset[]> {
+  return [
+    { id: 'rta-lushen', title: 'Lushen ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡ÃƒÂ¯Ã‚Â¿Ã‚Â½ Rage/Blade', mode: 'RTA', tags: ['ATK', 'CRI'], summary: 'Arena/RTA nuker' },
+    { id: 'rta-veromos', title: 'Veromos ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡ÃƒÂ¯Ã‚Â¿Ã‚Â½ Violent/Focus', mode: 'RTA', tags: ['HP', 'SPD'], summary: 'Controle/Sustain' },
+    // exemplos futuros:
+    // { id: 'arena-something', title: 'Time Arena XYZ', mode: 'Arena', tags: ['ATK'], summary: 'Em breve' },
+    // { id: 'cairos-gbr10', title: 'Giant B12 Safe', mode: 'Cairos', tags: ['Safe'], summary: 'Em breve' },
+  ];
+}
+
+const box = 'rounded-2xl border border-white/5 bg-white/[0.03] p-4 md:p-5';
 
 export default function PresetsPage() {
-  const { locale, t } = useLang();
-
-  const [items, setItems] = useState<UIPreset[]>([]);
-  const [q, setQ] = useState('');
-  const [sort, setSort] = useState<SortKey>('name');
-
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(9);
-  const perPageOptions = [6, 9, 12, 18];
-
-  // --- mapeia o retorno da API para o tipo da UI ---
-  const mapApiToUI = (p: ApiPreset): UIPreset => {
-    const anyP = p as any; // campos não garantidos pela API
-
-    const id =
-      anyP.id ??
-      anyP.slug ??
-      `${anyP.name ?? ''}-${anyP.monsterName ?? anyP.monster ?? ''}`;
-
-    const name: string = anyP.name ?? anyP.title ?? '';
-    const monsterName: string = anyP.monsterName ?? anyP.monster ?? '';
-    const runeSets: string = Array.isArray(anyP.sets)
-      ? anyP.sets.join(', ')
-      : anyP.runeSets ?? '';
-
-    const stats: Record<string, number> | undefined = anyP.stats ?? undefined;
-    const loc: string = anyP.locale ?? 'pt';
-
-    return { id, name, monsterName, runeSets, stats, locale: loc };
-  };
-
-  // carregar presets
-  useEffect(() => {
-    (async () => {
-      const res = await fetchPresets();
-      const mapped: UIPreset[] = (res.items ?? []).map(mapApiToUI);
-      setItems(mapped);
-    })();
-  }, []);
-
-  // filtro + sort
-  const filtered = useMemo(() => {
-    const s = q.toLowerCase().trim();
-    return items
-      .filter(
-        (p) =>
-          p.locale === locale &&
-          (!s ||
-            p.name.toLowerCase().includes(s) ||
-            p.monsterName.toLowerCase().includes(s) ||
-            p.runeSets.toLowerCase().includes(s)),
-      )
-      .sort((a, b) => String(a[sort]).localeCompare(String(b[sort])));
-  }, [items, q, sort, locale]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-  const pageItems = filtered.slice(
-    (page - 1) * perPage,
-    (page - 1) * perPage + perPage,
-  );
-
-  // sempre que mudar filtros, volta pra página 1
-  useEffect(() => {
-    setPage(1);
-  }, [q, sort, perPage, locale]);
+  const data = use(getPresets());
+  const activeMode: 'RTA' = 'RTA';
+  const list = data.filter((p) => p.mode === activeMode);
 
   return (
-    <main className="container-app py-8 space-y-6">
-      <header className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">
-            {t?.('presets.title') ?? 'Presets de Runas'}
-          </h1>
-          <p className="text-xs text-gray-400">
-            {t?.('presets.subtitle') ??
-              'Pesquise e organize presets prontos por monstro e sets.'}
-          </p>
-        </div>
+    <main className="px-6 md:px-10 lg:px-12 py-8 max-w-6xl mx-auto">
+      <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 text-[#cbb797]">Presets</h1>
 
-        <div className="flex flex-wrap gap-2">
-          <input
-            className="input w-56"
-            placeholder={t?.('common.search') ?? 'Pesquisar...'}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
+      {/* Tabs de modo */}
+      <div className="flex items-center gap-3 mb-6">
+        <button className="px-4 py-2 rounded-xl bg-yellow-400/90 text-black font-semibold border border-yellow-400 shadow">
+          RTA
+        </button>
+        <button
+          disabled
+          title="Em breve"
+          className="px-4 py-2 rounded-xl border border-white/10 bg-white/[0.06] text-white/50 cursor-not-allowed"
+        >
+          Arena (em breve)
+        </button>
+        <button
+          disabled
+          title="Em breve"
+          className="px-4 py-2 rounded-xl border border-white/10 bg-white/[0.06] text-white/50 cursor-not-allowed"
+        >
+          Cairos (em breve)
+        </button>
+      </div>
 
-          <select
-            className="select"
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-          >
-            <option value="name">Nome</option>
-            <option value="monsterName">Monstro</option>
-            <option value="runeSets">Sets</option>
-          </select>
-
-          <select
-            className="select"
-            value={perPage}
-            onChange={(e) => setPerPage(Number(e.target.value))}
-          >
-            {perPageOptions.map((n) => (
-              <option key={n} value={n}>
-                {n}/página
-              </option>
-            ))}
-          </select>
-        </div>
-      </header>
-
-      {/* lista */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {pageItems.map((p) => (
-          <article key={p.id} className="card">
-            <h3 className="font-medium text-lg">{p.name}</h3>
-            <p className="text-sm text-gray-400">{p.monsterName}</p>
-            <div className="mt-2 flex flex-wrap gap-1 text-xs">
-              {p.runeSets.split(',').map((s) => (
-                <span key={s.trim()} className="badge">
-                  {s.trim()}
-                </span>
-              ))}
-            </div>
-            {p.stats && (
-              <div className="mt-3 text-xs text-gray-400">
-                {Object.entries(p.stats).map(([k, v]) => (
-                  <span key={k} className="mr-2">
-                    {k.toUpperCase()}: {v}
-                  </span>
-                ))}
+      {/* Lista */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {list.map((p) => (
+          <article key={p.id} className={box}>
+            <div className="flex items-start gap-4">
+              <Image
+                src="/og-image.png"
+                alt=""
+                width={64}
+                height={64}
+                className="rounded-xl border border-white/10 bg-white/[0.04]"
+              />
+              <div className="flex-1">
+                <h2 className="text-white/90 font-semibold text-lg">{p.title}</h2>
+                <p className="text-xs text-white/50">{p.summary ?? 'Preset para RTA'}</p>
+                <div className="mt-3 flex gap-2">
+                  {p.tags.map((t) => (
+                    <span key={t} className="text-xs rounded-full px-2 py-1 bg-white/[0.06] border border-white/10 text-white/70">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-4">
+                  <button className="rounded-xl bg-yellow-400/90 hover:bg-yellow-400 text-black font-semibold px-4 py-2 text-sm">
+                    Abrir
+                  </button>
+                </div>
               </div>
-            )}
+            </div>
           </article>
         ))}
-
-        {pageItems.length === 0 && (
-          <div className="col-span-full text-sm text-gray-400">
-            {t?.('common.noResults') ?? 'Nenhum preset encontrado.'}
-          </div>
-        )}
-      </section>
-
-      {/* paginação */}
-      <footer className="flex items-center justify-between">
-        <span className="text-xs text-gray-400">
-          {filtered.length} resultados • {totalPages} páginas
-        </span>
-        <div className="flex gap-2">
-          <button
-            className="btn"
-            disabled={page <= 1}
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-          >
-            ←
-          </button>
-          <span className="text-sm">
-            {page}/{totalPages}
-          </span>
-          <button
-            className="btn"
-            disabled={page >= totalPages}
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          >
-            →
-          </button>
-        </div>
-      </footer>
+      </div>
     </main>
   );
 }

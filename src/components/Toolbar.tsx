@@ -10,7 +10,7 @@ export type Query = {
   page?: number;
 };
 
-// --- Função segura para lidar com SearchParams ---
+// --- FunÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o segura para lidar com SearchParams ---
 function useSearchParamsSafe(): URLSearchParams {
   if (typeof window === "undefined") return new URLSearchParams("");
   try {
@@ -53,7 +53,7 @@ export default function Toolbar() {
     <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto]">
       <input
         className="h-10 rounded-md border border-slate-300 bg-white px-3 outline-none focus:ring-2 focus:ring-blue-200"
-        placeholder="Buscar por nome…"
+        placeholder="Buscar por nomeÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦"
         defaultValue={q.q ?? ""}
         onKeyDown={(e) => {
           if (e.key === "Enter")
@@ -68,7 +68,7 @@ export default function Toolbar() {
         }
       >
         <option value="">Elemento: todos</option>
-        <option value="water">Água</option>
+        <option value="water">ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡ÃƒÂ¯Ã‚Â¿Ã‚Â½gua</option>
         <option value="wind">Vento</option>
         <option value="fire">Fogo</option>
         <option value="light">Luz</option>
@@ -88,7 +88,7 @@ export default function Toolbar() {
         <option value="">Estrelas: todas</option>
         {[1, 2, 3, 4, 5, 6].map((n) => (
           <option key={n} value={n}>
-            {n}★
+            {n}ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¹ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦
           </option>
         ))}
       </select>

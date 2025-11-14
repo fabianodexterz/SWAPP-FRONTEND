@@ -1,363 +1,177 @@
+// src/features/optimizer/OptimizerPresets.tsx
 "use client";
 
 import { useMemo, useState } from "react";
-import PRESETS_BUNDLE from "@/data/presets/presets_swapp";
+import { PRESETS_BUNDLE } from "@data/presets/presets_swapp"; // import nomeado correto
 
 type Locale = "pt" | "en";
 type StatKey =
-  | "SPD"
-  | "HP%"
-  | "DEF%"
-  | "ATK%"
-  | "CR%"
-  | "CD%"
-  | "RES"
-  | "ACC";
+  | "hp"
+  | "atk"
+  | "def"
+  | "spd"
+  | "criRate"
+  | "criDmg"
+  | "res"
+  | "acc";
 
-type Caps = Record<string, number>;
+// Tipo inferido diretamente do bundle de presets
+type SwappPreset = (typeof PRESETS_BUNDLE.presets)[number];
 
-interface FormState {
-  SPD: number | "";
-  "HP%": number | "";
-  "DEF%": number | "";
-  "ATK%": number | "";
-  "CR%": number | "";
-  "CD%": number | "";
-  RES: number | "";
-  ACC: number | "";
+interface OptimizerPresetsProps {
+  locale?: Locale;
 }
 
-const EMPTY_FORM: FormState = {
-  SPD: "",
-  "HP%": "",
-  "DEF%": "",
-  "ATK%": "",
-  "CR%": "",
-  "CD%": "",
-  RES: "",
-  ACC: "",
-};
-
-function clamp(num: number, min?: number, max?: number) {
-  let n = Number.isFinite(num) ? num : 0;
-  if (typeof min === "number") n = Math.max(min, n);
-  if (typeof max === "number") n = Math.min(max, n);
-  return n;
-}
-
-export default function OptimizerPresets({
-  initialLocale = "pt",
-}: {
-  initialLocale?: Locale;
-}) {
-  const [locale, setLocale] = useState<Locale>(initialLocale);
-  const [presetId, setPresetId] = useState<string>("");
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+export function OptimizerPresets({ locale = "pt" }: OptimizerPresetsProps) {
+  const [presetId, setPresetId] = useState<string | null>(null);
   const [messages, setMessages] = useState<string[]>([]);
 
   const presets = PRESETS_BUNDLE.presets;
 
   const selected = useMemo(
     () => presets.find((p) => p.id === presetId),
-    [presets, presetId],
+    [presetId, presets]
   );
 
-  const requiredMin: Caps | undefined = selected?.required_caps?.[locale];
-  const maxCaps: Caps | undefined = selected?.status_maximos_exigidos;
+  function handleSelectPreset(preset: SwappPreset) {
+    setPresetId(preset.id);
 
-  function applyPresetDefaults() {
-    if (!selected) return;
-    // Preenche o formulário com os mínimos do preset (quando houver)
-    const f: FormState = { ...EMPTY_FORM };
-    const keys: StatKey[] = ["SPD", "HP%", "DEF%", "ATK%", "CR%", "CD%", "RES", "ACC"];
+    const msg: string =
+      locale === "pt"
+        ? `Preset "${preset.name.pt}" carregado. Ajuste os filtros do otimizador conforme desejado.`
+        : `Preset "${preset.name.en}" loaded. Tune optimizer filters as needed.`;
 
-    for (const k of keys) {
-      const minKey = Object.keys(requiredMin ?? {}).find((rk) =>
-        rk.toUpperCase().startsWith(k.toUpperCase()),
-      );
-      const raw = minKey ? requiredMin?.[minKey] : undefined;
-      f[k] = typeof raw === "number" ? (raw as number) : "";
-    }
-    setForm(f);
-    setMessages([]);
+    setMessages((prev) => [...prev, msg]);
   }
 
-  function updateField(key: StatKey, value: string) {
-    // normaliza para número ou vazio
-    const raw = value.replace(",", ".").trim();
-    const num = raw === "" ? "" : Number(raw);
-
-    if (num === "") {
-      setForm((prev) => ({ ...prev, [key]: "" }));
-      return;
-    }
-    if (!Number.isFinite(num)) return;
-
-    // aplica clamp de teto, se houver
-    const maxFor = maxCaps?.[key] ?? undefined;
-    const clamped = clamp(num as number, undefined, maxFor);
-
-    setForm((prev) => ({ ...prev, [key]: clamped }));
-  }
-
-  function validateCaps() {
-    const errs: string[] = [];
-    if (!selected) return setMessages(["Selecione um preset primeiro."]);
-
-    if (requiredMin) {
-      for (const [reqKey, reqVal] of Object.entries(requiredMin)) {
-        // mapeia nome flexível do required_caps para nossa chave padrão
-        const normalized: StatKey | undefined = ([
-          "SPD",
-          "HP%",
-          "DEF%",
-          "ATK%",
-          "CR%",
-          "CD%",
-          "RES",
-          "ACC",
-        ] as StatKey[]).find((k) => reqKey.toUpperCase().startsWith(k));
-
-        if (!normalized) continue;
-        const current = form[normalized];
-        if (typeof current !== "number") {
-          errs.push(
-            locale === "pt"
-              ? `Preencha ${normalized} (mín: ${reqVal}).`
-              : `Fill ${normalized} (min: ${reqVal}).`,
-          );
-        } else if (current < reqVal) {
-          errs.push(
-            locale === "pt"
-              ? `${normalized} abaixo do mínimo (${current} < ${reqVal}).`
-              : `${normalized} below minimum (${current} < ${reqVal}).`,
-          );
-        }
-      }
-    }
-
-    // avisa quando estoura teto
-    if (maxCaps) {
-      for (const [capKey, capMax] of Object.entries(maxCaps)) {
-        const k = capKey as StatKey;
-        const current = form[k];
-        if (typeof current === "number" && current > capMax) {
-          errs.push(
-            locale === "pt"
-              ? `${k} acima do teto (${current} > ${capMax}).`
-              : `${k} above cap (${current} > ${capMax}).`,
-          );
-        }
-      }
-    }
-
-    setMessages(
-      errs.length
-        ? errs
-        : [
-            locale === "pt"
-              ? "Tudo certo! Parâmetros dentro dos limites."
-              : "All good! Parameters within limits.",
-          ],
-    );
-  }
-
-  const statInputs: { key: StatKey; labelPT: string; labelEN: string; hint?: string }[] =
-    [
-      { key: "SPD", labelPT: "Velocidade (SPD)", labelEN: "Speed (SPD)" },
-      { key: "HP%", labelPT: "Vida % (HP%)", labelEN: "HP % (HP%)" },
-      { key: "DEF%", labelPT: "Defesa % (DEF%)", labelEN: "Defense % (DEF%)" },
-      { key: "ATK%", labelPT: "Ataque % (ATK%)", labelEN: "Attack % (ATK%)" },
-      { key: "CR%", labelPT: "Taxa Crítica % (CR%)", labelEN: "Crit Rate % (CR%)" },
-      { key: "CD%", labelPT: "Dano Crítico % (CD%)", labelEN: "Crit Damage % (CD%)" },
-      { key: "RES", labelPT: "Resistência % (RES)", labelEN: "Resistance % (RES)" },
-      { key: "ACC", labelPT: "Precisão % (ACC)", labelEN: "Accuracy % (ACC)" },
-    ];
+  const t = (pt: string, en: string) => (locale === "pt" ? pt : en);
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight">
-            {locale === "pt" ? "Otimizado • Presets" : "Optimizer • Presets"}
-          </h2>
-          <p className="text-sm opacity-80">
-            {locale === "pt"
-              ? "Selecione um preset, ajuste estatísticas e valide contra mínimos e tetos."
-              : "Select a preset, tune stats, and validate against minimums and caps."}
-          </p>
-        </div>
+    <section className="space-y-4">
+      <header className="flex flex-col gap-2">
+        <h2 className="text-lg font-semibold text-primary-100">
+          {t("Presets rápidos para o Otimizador", "Quick presets for Optimizer")}
+        </h2>
+        <p className="text-sm text-neutral-300 max-w-2xl">
+          {t(
+            "Escolha um preset abaixo para preencher rapidamente alvos de status e filtros do otimizador. Útil para builds padrão de Arena, RTA e conteúdo PvE.",
+            "Choose a preset below to quickly fill status targets and optimizer filters. Useful for default Arena, RTA and PvE builds."
+          )}
+        </p>
+      </header>
 
-        {/* Locale + Preset */}
-        <div className="flex flex-col md:flex-row gap-2">
-          <select
-            className="rounded-xl border bg-transparent px-3 py-2"
-            value={locale}
-            onChange={(e) => setLocale(e.target.value as Locale)}
-            aria-label="Locale"
-          >
-            <option value="pt">PT-BR</option>
-            <option value="en">EN</option>
-          </select>
-
-          <select
-            className="rounded-xl border bg-transparent px-3 py-2 min-w-64"
-            value={presetId}
-            onChange={(e) => {
-              setPresetId(e.target.value);
-              setMessages([]);
-            }}
-            aria-label="Preset"
-          >
-            <option value="">
-              {locale === "pt" ? "— Selecione um preset —" : "— Select a preset —"}
-            </option>
-            {presets.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name[locale]} — {p.role.join("/")}
-              </option>
-            ))}
-          </select>
-
+      {/* LISTA DE PRESETS */}
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {presets.map((preset) => (
           <button
+            key={preset.id}
             type="button"
-            onClick={applyPresetDefaults}
-            disabled={!selected}
-            className="rounded-xl border px-3 py-2 disabled:opacity-50"
-            title={
-              locale === "pt"
-                ? "Preencher com mínimos do preset"
-                : "Fill with preset minimums"
-            }
+            onClick={() => handleSelectPreset(preset)}
+            className="group flex flex-col items-start gap-2 rounded-2xl border border-neutral-800/80 bg-gradient-to-br from-neutral-900/80 to-neutral-950/90 px-4 py-3 text-left shadow-card transition hover:border-amber-400/70 hover:shadow-lg"
           >
-            {locale === "pt" ? "Aplicar mínimos" : "Apply minimums"}
-          </button>
-        </div>
-      </div>
+            <div className="flex w-full items-center justify-between gap-2">
+              <div>
+                <div className="text-xs font-semibold uppercase tracking-wide text-amber-400/90">
+                  {preset.tags?.includes("rta")
+                    ? "RTA"
+                    : preset.tags?.includes("arena")
+                    ? "Arena"
+                    : "Preset"}
+                </div>
+                <div className="text-sm font-semibold text-primary-50">
+                  {locale === "pt" ? preset.name.pt : preset.name.en}
+                </div>
+              </div>
 
-      {/* Descrição + Runes */}
-      {selected && (
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-2xl border p-4">
-            <h3 className="font-semibold">{selected.name[locale]}</h3>
-            <p className="text-sm opacity-80">{selected.description[locale]}</p>
-            <div className="mt-3 text-sm">
-              <div className="opacity-80">
-                <strong>{locale === "pt" ? "Modos:" : "Modes:"}</strong>{" "}
-                {selected.game_modes.join(", ")}
-              </div>
-              <div className="opacity-80">
-                <strong>Runes:</strong>{" "}
-                {selected.runes.primary_sets.join("/")} +{" "}
-                {selected.runes.secondary_sets.join("/")} | 2/4/6:{" "}
-                {selected.runes.slot246.join(", ")}
-              </div>
-              <div className="opacity-80">
-                <strong>{locale === "pt" ? "Artefatos:" : "Artifacts:"}</strong>{" "}
-                {selected.artifacts.type.join("/")} •{" "}
-                {selected.artifacts.focus.join(", ")}
-              </div>
-              <div className="opacity-80">
-                <strong>{locale === "pt" ? "Prioridade:" : "Priority:"}</strong>{" "}
-                {selected.stat_priority.join(" > ")}
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border p-4">
-            <h4 className="font-semibold mb-2">
-              {locale === "pt" ? "Limites do Preset" : "Preset Limits"}
-            </h4>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-              {(["SPD", "HP%", "DEF%", "ATK%", "CR%", "CD%", "RES", "ACC"] as StatKey[]).map(
-                (k) => (
-                  <div key={k} className="flex items-center justify-between">
-                    <span className="opacity-80">{k}</span>
-                    <span className="text-right">
-                      {requiredMin && Object.entries(requiredMin).find(([rk]) =>
-                        rk.toUpperCase().startsWith(k),
-                      )
-                        ? `min ${
-                            Object.entries(requiredMin).find(([rk]) =>
-                              rk.toUpperCase().startsWith(k),
-                            )![1]
-                          }`
-                        : "—"}
-                      {"  "}
-                      {maxCaps?.[k] !== undefined ? `| cap ${maxCaps[k]}` : ""}
+              {preset.roles && preset.roles.length > 0 && (
+                <div className="flex flex-wrap justify-end gap-1">
+                  {preset.roles.map((role) => (
+                    <span
+                      key={role}
+                      className="rounded-full bg-neutral-800/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-neutral-200"
+                    >
+                      {role}
                     </span>
-                  </div>
-                ),
+                  ))}
+                </div>
               )}
             </div>
+
+            {preset.description && (
+              <p className="text-xs text-neutral-300">
+                {locale === "pt"
+                  ? preset.description.pt
+                  : preset.description.en}
+              </p>
+            )}
+
+            {/* TAGS PRINCIPAIS */}
+            {preset.tags && preset.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {preset.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full bg-neutral-900/80 px-2 py-0.5 text-[10px] font-medium text-amber-300/90"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* ALVOS DE STATUS (resumo) */}
+            {preset.targets && (
+              <div className="mt-2 grid grid-cols-3 gap-1 text-[11px] text-neutral-200">
+                {Object.entries(preset.targets).map(([stat, value]) => {
+                  if (value == null) return null;
+                  const labelMap: Record<StatKey, string> = {
+                    hp: "HP",
+                    atk: "ATK",
+                    def: "DEF",
+                    spd: "SPD",
+                    criRate: "CRI",
+                    criDmg: "CDMG",
+                    res: "RES",
+                    acc: "ACC",
+                  };
+                  const label =
+                    labelMap[stat as StatKey] ?? stat.toUpperCase();
+
+                  return (
+                    <div
+                      key={stat}
+                      className="flex items-center justify-between rounded-md bg-neutral-900/70 px-2 py-1"
+                    >
+                      <span className="text-[10px] text-neutral-400">
+                        {label}
+                      </span>
+                      <span className="text-[11px] font-semibold text-amber-300">
+                        {typeof value === "number" ? value : String(value)}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* MENSAGENS / LOG SIMPLES */}
+      {messages.length > 0 && (
+        <div className="mt-3 space-y-1 rounded-2xl border border-neutral-800/80 bg-neutral-950/90 p-3 text-xs text-neutral-300">
+          <div className="font-semibold text-amber-300">
+            {t("Log de presets", "Preset log")}
           </div>
-        </div>
-      )}
-
-      {/* Formulário de stats */}
-      <div className="rounded-2xl border p-4">
-        <h4 className="font-semibold mb-4">
-          {locale === "pt" ? "Atributos do Monstro" : "Monster Attributes"}
-        </h4>
-
-        <div className="grid gap-3 md:grid-cols-4">
-          {statInputs.map(({ key, labelPT, labelEN }) => (
-            <label key={key} className="flex flex-col gap-1">
-              <span className="text-sm">{locale === "pt" ? labelPT : labelEN}</span>
-              <input
-                inputMode="decimal"
-                className="rounded-xl border bg-transparent px-3 py-2"
-                placeholder={
-                  maxCaps?.[key] !== undefined
-                    ? `${locale === "pt" ? "teto" : "cap"} ${maxCaps[key]}`
-                    : ""
-                }
-                value={form[key]}
-                onChange={(e) => updateField(key, e.target.value)}
-              />
-            </label>
-          ))}
-        </div>
-
-        <div className="mt-4 flex gap-2">
-          <button
-            type="button"
-            onClick={validateCaps}
-            className="rounded-xl border px-3 py-2"
-          >
-            {locale === "pt" ? "Validar" : "Validate"}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setForm(EMPTY_FORM);
-              setMessages([]);
-            }}
-            className="rounded-xl border px-3 py-2"
-          >
-            {locale === "pt" ? "Limpar" : "Clear"}
-          </button>
-        </div>
-
-        {!!messages.length && (
-          <ul className="mt-3 space-y-1 text-sm">
-            {messages.map((m, i) => (
-              <li
-                key={i}
-                className={
-                  m.toLowerCase().includes("tudo certo") ||
-                  m.toLowerCase().includes("all good")
-                    ? "text-emerald-600"
-                    : "text-red-600"
-                }
-              >
+          <ul className="space-y-0.5">
+            {messages.map((m, idx) => (
+              <li key={idx} className="text-[11px] text-neutral-200">
                 • {m}
               </li>
             ))}
           </ul>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </section>
   );
 }

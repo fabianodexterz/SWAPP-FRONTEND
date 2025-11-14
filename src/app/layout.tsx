@@ -1,22 +1,22 @@
 // src/app/layout.tsx
-import "./globals.css";
-import type { Metadata, Viewport } from "next";
+import './globals.css';
+import type { Metadata } from 'next';
+import { ThemeProvider } from './_components/ThemeProvider';
 
 export const metadata: Metadata = {
-  title: "SWAPP",
-  description: "Sua central premium para monstros, runas e presets.",
+  title: 'SWAPP – Summoners War Assistant',
+  description:
+    'Sua central premium para conta, runas, monstros, presets e otimização no estilo Summoners War.',
 };
 
-export const viewport: Viewport = {
-  themeColor: "#0b0b0b",
-  colorScheme: "dark",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className="min-h-screen bg-[#0b0b0b] text-gray-200 antialiased">
-        {children}
+      <head>
+        <meta charSet="utf-8" />
+      </head>
+      <body className="bg-[#050509] text-slate-50 antialiased">
+        <ThemeProvider>{props.children}</ThemeProvider>
       </body>
     </html>
   );

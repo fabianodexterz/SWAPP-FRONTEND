@@ -1,14 +1,12 @@
 // src/app/page.tsx
-import type { Metadata, Viewport } from "next";
-import HomeHero from "@/components/HomeHero";
+import HomeHero from './_components/HomeHero';
 
-export const metadata: Metadata = {
-  title: "SWAPP • Home",
-  description:
-    "SWAPP — Gerencie monstros, runas e presets num painel dark premium. Faça login e otimize seu progresso.",
-};
-export const viewport: Viewport = { width: "device-width", initialScale: 1 };
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-[#050509] via-[#050509] to-[#050509]">
+      <HomeHero />
 
-export default function Page() {
-  return <HomeHero />;
+      {/* Aqui ficam as próximas seções da landing (cards, como funciona, footer etc.) */}
+    </main>
+  );
 }

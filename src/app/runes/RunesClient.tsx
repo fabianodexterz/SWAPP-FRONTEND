@@ -13,7 +13,7 @@ type Runa = {
 };
 
 type Props = {
-  items?: Runa[]; // opcional: você pode injetar as runas via props
+  items?: Runa[]; // opcional: vocÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª pode injetar as runas via props
 };
 
 const MOCK: Runa[] = [
@@ -125,7 +125,7 @@ export default function RunesClient({ items = MOCK }: Props) {
 
             <ul className="mt-3 space-y-1 text-sm opacity-90">
               {r.substats.map((s, i) => (
-                <li key={i}>• {s}</li>
+                <li key={i}>ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ {s}</li>
               ))}
             </ul>
 

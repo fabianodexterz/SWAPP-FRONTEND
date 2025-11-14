@@ -32,7 +32,7 @@ export default function MiniBar({ items, data, height = 120, showValues = false 
   return (
     <div className="w-full flex items-end gap-2" style={{ height }}>
       {series.map((s, i) => {
-        const h = Math.max(4, Math.round((s.value / max) * (height - 28))); // margem p/ rótulos
+        const h = Math.max(4, Math.round((s.value / max) * (height - 28))); // margem p/ rÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³tulos
         const color = s.color ?? '#f5d27b';
 
         return (

@@ -1,39 +1,58 @@
 "use client";
+
 import React, { useState } from "react";
-import { loginAction } from "../actions";
+import Link from "next/link";
+import api from "@/lib/api";
 
 export default function LoginPage() {
-  const [pending, setPending] = useState(false);
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setPending(true);
+    setLoading(true);
+    setMsg(null);
+    setErr(null);
+
+    const data = Object.fromEntries(new FormData(e.currentTarget)) as {
+      email: string;
+      password: string;
+    };
+
     try {
-      const data = new FormData(e.currentTarget);
-      await loginAction(data);
-    } catch (err) {
-      alert((err as Error)?.message || "Erro ao entrar");
+      const res = await api("/auth/login", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      setMsg(typeof res === "string" ? res : "Login efetuado!");
+      // TODO: redirecionar para / (ou rota protegida) após login
+    } catch (e: any) {
+      setErr(e?.message ?? "Falha ao efetuar login.");
     } finally {
-      setPending(false);
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <h1 className="text-2xl font-semibold text-zinc-100 text-center">Entrar</h1>
-      <div className="space-y-2">
-        <label className="text-sm text-zinc-300">E-mail</label>
-        <input name="email" type="email" required className="w-full rounded-lg bg-zinc-800/70 px-4 py-2 outline-none ring-1 ring-zinc-700 focus:ring-amber-400" placeholder="voce@exemplo.com" />
+    <div className="max-w-md mx-auto p-6 space-y-4">
+      <h1 className="text-xl font-semibold">Entrar</h1>
+
+      {msg && <div className="alert alert-success">{msg}</div>}
+      {err && <div className="alert alert-error">{err}</div>}
+
+      <form className="space-y-3" onSubmit={onSubmit}>
+        <input name="email" type="email" className="input input-bordered w-full" placeholder="E-mail" required />
+        <input name="password" type="password" className="input input-bordered w-full" placeholder="Senha" required />
+        <button className="btn btn-primary w-full" disabled={loading}>
+          {loading ? "Entrando..." : "Entrar"}
+        </button>
+      </form>
+
+      <div className="text-sm flex items-center justify-between">
+        <Link href="/auth/forgot" className="link">Esqueci a senha</Link>
+        <Link href="/auth/register" className="link">Criar conta</Link>
       </div>
-      <div className="space-y-2">
-        <label className="text-sm text-zinc-300">Senha</label>
-        <input name="password" type="password" required className="w-full rounded-lg bg-zinc-800/70 px-4 py-2 outline-none ring-1 ring-zinc-700 focus:ring-amber-400" placeholder="••••••••" />
-      </div>
-      <button type="submit" disabled={pending} className="w-full rounded-lg bg-amber-400 px-4 py-2 font-semibold text-zinc-900 hover:bg-amber-300 disabled:opacity-60">
-        {pending ? "Entrando..." : "Entrar"}
-      </button>
-      <p className="pt-2 text-center text-sm text-zinc-400">
-        Novo por aqui? <a className="text-amber-300 hover:underline" href="/register">Criar conta</a>
-      </p>
-    </form>
+    </div>
   );
 }

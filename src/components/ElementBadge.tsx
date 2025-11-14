@@ -8,10 +8,10 @@ type Props = {
   element: ElementKey;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
-  children?: React.ReactNode; // opcional: caso queira renderizar texto/ícone custom
+  children?: React.ReactNode; // opcional: caso queira renderizar texto/ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cone custom
 };
 
-// Paleta pensada para tema dark (funciona no light também)
+// Paleta pensada para tema dark (funciona no light tambÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©m)
 const ELEMENT_STYLE: Record<ElementKey, string> = {
   Fire:  'bg-[#2b0f0f] border-red-500/40 text-red-300',
   Water: 'bg-[#0f162b] border-blue-500/40 text-blue-300',
@@ -44,7 +44,7 @@ export default function ElementBadge({
       title={element}
       aria-label={`Elemento: ${element}`}
     >
-      {/* se quiser, troque por um ícone futuramente */}
+      {/* se quiser, troque por um ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cone futuramente */}
       <span
         aria-hidden
         className={cn(

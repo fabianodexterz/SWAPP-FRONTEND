@@ -16,7 +16,7 @@ export default function UploadJsonPage() {
     try {
       setPreview(JSON.parse(text));
     } catch {
-      setPreview({ erro: 'JSON inválido' });
+      setPreview({ erro: 'JSON invÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡lido' });
     }
   }
 
@@ -24,7 +24,7 @@ export default function UploadJsonPage() {
     // Troque pelo POST real quando o backend estiver pronto
     console.log('Nome dataset:', name);
     console.log('JSON:', preview ?? fileJson);
-    alert('Arquivo carregado. Verifique o console. Integração futura com backend.');
+    alert('Arquivo carregado. Verifique o console. IntegraÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o futura com backend.');
   }
 
   return (

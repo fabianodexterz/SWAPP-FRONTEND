@@ -41,7 +41,7 @@ export default function MonsterFilters({
           <input
             value={local.q}
             onChange={(e)=>update("q", e.target.value)}
-            placeholder="Nome, elemento, arquétipo"
+            placeholder="Nome, elemento, arquÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©tipo"
             className="mt-1 w-full rounded-lg bg-black/40 px-3 py-2 text-sm outline-none ring-1 ring-white/10 focus:ring-2 focus:ring-white/20"
           />
         </div>

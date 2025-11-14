@@ -41,7 +41,7 @@ export default function OptimizerPanel() {
   const [score, setScore] = useState<number>(0);
   const [expected, setExpected] = useState<number>(0);
 
-  // valores de exibição (substitua por dados reais vindos do backend se preferir)
+  // valores de exibiÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o (substitua por dados reais vindos do backend se preferir)
   const current: Record<StatKey, number> = { HP:11205, ATK:670, DEF:725, SPD:96, 'CRI Rate':33, 'CRI Dmg':79, Resistance:104, Accuracy:0 };
   const gains:   Record<StatKey, number> = { HP:25057, ATK:276, DEF:653, SPD:152, 'CRI Rate':0, 'CRI Dmg':0, Resistance:0, Accuracy:0 };
 
@@ -64,14 +64,14 @@ export default function OptimizerPanel() {
         constraints: { min, max },
       };
 
-      // 1ª tentativa: rota mais provável
+      // 1ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª tentativa: rota mais provÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡vel
       let res = await fetch('/api/optimizer/suggest', {
         method: 'POST',
         headers: { 'Content-Type':'application/json' },
         body: JSON.stringify(payload)
       });
 
-      // fallback para projetos que expõem apenas /api/optimizer (POST)
+      // fallback para projetos que expÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âµem apenas /api/optimizer (POST)
       if (!res.ok) {
         res = await fetch('/api/optimizer', {
           method: 'POST',
@@ -109,7 +109,7 @@ export default function OptimizerPanel() {
 
   return (
     <div className="mx-auto max-w-6xl">
-      {/* Título */}
+      {/* TÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­tulo */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-text">Otimizar (IA Rune + Artefatos)</h1>
         <div className="flex items-center gap-3">
@@ -145,7 +145,7 @@ export default function OptimizerPanel() {
                 onClick={()=>setFavorite(v=>!v)}
                 className="w-full rounded-2xl border border-border bg-[#101622] px-4 py-2 text-sm text-text hover:border-gold/50 transition"
               >
-                {favorite ? '★ Em favoritos' : 'Adicionar aos Favoritos'}
+                {favorite ? 'ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¹ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ Em favoritos' : 'Adicionar aos Favoritos'}
               </button>
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function OptimizerPanel() {
           {/* Sets */}
           <div className="mt-6 grid grid-cols-1 gap-6">
             <ChipGroup
-              title="Sets obrigatórios"
+              title="Sets obrigatÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³rios"
               items={ALL_SETS}
               selected={setsRequired}
               onToggle={(s)=>toggleSet(setsRequired, setSetsRequired, s)}
@@ -171,7 +171,7 @@ export default function OptimizerPanel() {
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-sm text-subtext">
                 <input type="checkbox" checked={pickArtifacts} onChange={e=>setPickArtifacts(e.target.checked)} />
-                Escolher artefatos também
+                Escolher artefatos tambÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©m
               </label>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-subtext">Qtd</span>
@@ -186,7 +186,7 @@ export default function OptimizerPanel() {
           </div>
         </div>
 
-        {/* Direita: stats + filtros + ações + resultados */}
+        {/* Direita: stats + filtros + aÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âµes + resultados */}
         <div className="col-span-12 md:col-span-8 space-y-6">
           {/* Atributos atuais */}
           <div className="rounded-3xl bg-surface/90 border border-border p-5 shadow-xl">
@@ -203,7 +203,7 @@ export default function OptimizerPanel() {
             </div>
           </div>
 
-          {/* Seleção slots + constraints */}
+          {/* SeleÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o slots + constraints */}
           <div className="rounded-3xl bg-surface/90 border border-border p-5 shadow-xl">
             <div className="flex flex-wrap items-center gap-4">
               <SlotSelect label="* Slot 2 Main" value={slot2} onChange={setSlot2} options={['SPD','ATK%','HP%','DEF%']} />
@@ -365,7 +365,7 @@ function BuildCard({ build }: {build: Build}) {
           <div key={r.slot} className="rounded-xl border border-border bg-[#0c1117] px-3 py-2">
             <div className="text-subtext text-xs">Slot {r.slot}</div>
             <div className="text-text text-sm">{r.main}</div>
-            {r.subs && <div className="mt-1 text-[11px] text-subtext">{r.subs.join(' · ')}</div>}
+            {r.subs && <div className="mt-1 text-[11px] text-subtext">{r.subs.join(' ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â· ')}</div>}
           </div>
         ))}
       </div>

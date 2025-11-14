@@ -6,7 +6,7 @@ export default function ImportPage(){
   const send = async () => {
     setMsg(null); setErr(null);
     const file = ref.current?.files?.[0]; if (!file) { setErr("Selecione um arquivo JSON."); return; }
-    try { const text = await file.text(); let json = JSON.parse(text); if (Array.isArray(json)) json = { presets: json }; if (!json.presets || !Array.isArray(json.presets)) { setErr("Formato inválido. Esperado { presets: [...] } ou um array de presets."); return; }
+    try { const text = await file.text(); let json = JSON.parse(text); if (Array.isArray(json)) json = { presets: json }; if (!json.presets || !Array.isArray(json.presets)) { setErr("Formato invÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡lido. Esperado { presets: [...] } ou um array de presets."); return; }
       const res = await fetch(`${apiBase}/api/presets/import`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(json) });
       const data = await res.json(); if (!res.ok) throw new Error(data?.error || "Erro ao importar"); setMsg(`Importado com sucesso: ${data.created} presets.`);
     } catch (e:any) { setErr(e.message || "Falha ao importar"); }

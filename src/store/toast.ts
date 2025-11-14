@@ -1,30 +1,15 @@
+// src/store/toast.ts
 import { create } from "zustand";
 
-export type ToastType = "success" | "error" | "info";
+export type ToastKind = "success" | "error" | "info" | "warning";
 
-export interface Toast {
-  id: number;
-  message: string;
-  type: ToastType;
-}
-
-interface ToastState {
-  toasts: Toast[];
-  addToast: (message: string, type?: ToastType) => void;
-  removeToast: (id: number) => void;
-}
+type ToastState = {
+  last?: { message: string; type: ToastKind; at: number };
+  showToast: (message: string, type?: ToastKind) => void;
+};
 
 export const useToastStore = create<ToastState>((set) => ({
-  toasts: [],
-  addToast: (message, type = "info") =>
-    set((state) => ({
-      toasts: [
-        ...state.toasts,
-        { id: Date.now(), message, type },
-      ],
-    })),
-  removeToast: (id) =>
-    set((state) => ({
-      toasts: state.toasts.filter((t) => t.id !== id),
-    })),
+  last: undefined,
+  showToast: (message, type = "info") =>
+    set({ last: { message, type, at: Date.now() } }),
 }));

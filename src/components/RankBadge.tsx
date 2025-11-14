@@ -18,7 +18,7 @@ export default function RankBadge({ score, size = 36, showText = false, classNam
 
   const text = rank.tier === 'legend'
     ? 'Legend'
-    : `${rank.label} ${'★'.repeat(rank.stars)}`;
+    : `${rank.label} ${'âËœâ€¦'.repeat(rank.stars)}`;
 
   return (
     <div className={`inline-flex items-center gap-2 ${className}`}>

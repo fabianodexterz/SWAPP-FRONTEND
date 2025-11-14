@@ -18,6 +18,6 @@ export async function registerAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  // TODO: invalidar sessão/token
+  // TODO: invalidar sessÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o/token
   redirect("/");
 }

@@ -1,5 +1,5 @@
-// tailwind.tokens.snippet.ts
-// Cole o conteúdo dentro de theme.extend do seu tailwind.config.{js,ts}
+﻿// tailwind.tokens.snippet.ts
+// Cole o conteÃºdo dentro de theme.extend do seu tailwind.config.{js,ts}
 export const tokens = {
   colors: {
     bg:       '#0e1116',

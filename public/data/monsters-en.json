@@ -1,6 +1,12 @@
-{
-  "1974": "FillEnglishNameHere",
-  "1975": "FillEnglishNameHere",
-  "1976": "FillEnglishNameHere",
-  "1978": "FillEnglishNameHere"
-}
+[
+  {
+    "id": 101,
+    "name": "Lushen",
+    "element": "Wind"
+  },
+  {
+    "id": 102,
+    "name": "Veromos",
+    "element": "Dark"
+  }
+]

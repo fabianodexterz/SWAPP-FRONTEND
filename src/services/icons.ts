@@ -1,42 +1,47 @@
 // src/services/icons.ts
-// Serviço de ícones sem depender de PUBLIC_BASE.
-// Usa apenas a função Api (JSON) e fetch direto para multipart.
-
-import { Api } from '@/lib/api';
-
-const BASE = '/api/icons';
+import api from "@/lib/api";
 
 export type IconItem = {
   id: string;
-  name: string;
+  name?: string;
   url: string;
 };
 
-export const icons = {
-  // GET /api/icons  -> { items: IconItem[] }
-  list: async (): Promise<IconItem[]> => {
-    const res = await Api<{ items?: IconItem[] }>(BASE);
-    return res.items ?? [];
-  },
+const BASE = "/api/icons";
 
-  // DELETE /api/icons/:id
-  remove: async (id: string): Promise<void> => {
-    await Api<void>(`${BASE}/${encodeURIComponent(id)}`, { method: 'DELETE' });
-  },
+/**
+ * Lista os ícones disponíveis.
+ */
+export async function listIcons(): Promise<IconItem[]> {
+  const data = await api<{ list?: IconItem[] } | IconItem[]>(BASE);
+  if (Array.isArray(data)) return data;
+  return Array.isArray(data?.list) ? data.list! : [];
+}
 
-  // POST /api/icons (multipart) -> IconItem
-  // Usa fetch direto para multipart/form-data (Api é para JSON).
-  upload: async (file: File): Promise<IconItem> => {
-    const form = new FormData();
-    form.append('file', file);
+/**
+ * Cria/enviar novo ícone.
+ */
+export async function createIcon(file: File, name?: string): Promise<IconItem | null> {
+  const fd = new FormData();
+  fd.append("file", file);
+  if (name) fd.append("name", name);
 
-    const res = await fetch(BASE, {
-      method: 'POST',
-      body: form,
-    });
-    if (!res.ok) throw new Error('Falha no upload do ícone');
-    return (await res.json()) as IconItem;
-  },
-};
+  const res = await fetch(BASE, {
+    method: "POST",
+    body: fd,
+    credentials: "include",
+  });
 
-export default icons;
+  if (!res.ok) throw new Error("Falha ao enviar ícone");
+  return (await res.json()) as IconItem;
+}
+
+/**
+ * Remove um ícone pelo ID.
+ */
+export async function deleteIcon(id: string): Promise<boolean> {
+  const res = await api<{ ok?: boolean }>(`${BASE}/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+  });
+  return !!res?.ok;
+}

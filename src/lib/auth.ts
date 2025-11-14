@@ -21,7 +21,7 @@ export async function doLogin(email: string, password: string): Promise<LoginRes
     }
 
     const data = await res.json()
-    if (!data?.token) return { ok: false, message: 'Resposta inválida do servidor' }
+    if (!data?.token) return { ok: false, message: 'Resposta invÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡lida do servidor' }
     return { ok: true, token: String(data.token) }
   } catch {
     return { ok: false, message: 'Erro de rede. Tente novamente.' }

@@ -1,83 +1,75 @@
 // src/services/monsters.ts
-// Wrapper para a API de monstros usando o helper Api (JSON) sem PUBLIC_BASE.
-
-import { Api } from '@/lib/api';
+import api from "@/lib/api";
 
 export type Monster = {
   id: number;
   name: string;
-  element: string;       // Fire | Water | Wind | Light | Dark (livre aqui)
-  natStars: number;      // 1..6
-  awakened?: boolean;
-  portraitUrl?: string | null;
-  swarfarmId?: number | null;
+  element: string;
+  archetype?: string;
+  imageUrl?: string;
 };
 
-export type MonsterFilters = {
-  q?: string;
-  element?: string;
-  page?: number;
-  limit?: number;
-  sort?: string; // 'name' | 'natStars' etc.
-};
-
-export type Paginated<T> = {
-  items: T[];
+export type PaginatedMonsters = {
+  items: Monster[];
   total: number;
-  page: number;
-  limit: number;
 };
 
-const BASE = '/api/monsters';
+const BASE = "/api/monsters";
 
-function toQuery(filters: MonsterFilters = {}): string {
-  const params = new URLSearchParams();
-  if (filters.q) params.set('q', filters.q);
-  if (filters.element) params.set('element', filters.element);
-  if (filters.page != null) params.set('page', String(filters.page));
-  if (filters.limit != null) params.set('limit', String(filters.limit));
-  if (filters.sort) params.set('sort', filters.sort);
-  const qs = params.toString();
-  return qs ? `?${qs}` : '';
+/**
+ * Lista de monstros com filtros e paginação
+ */
+export async function listMonsters(filters?: Record<string, string | number>): Promise<PaginatedMonsters> {
+  const query = filters
+    ? "?" +
+      Object.entries(filters)
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+        .join("&")
+    : "";
+
+  const res = await api<PaginatedMonsters>(`${BASE}${query}`);
+  return {
+    items: res?.items || [],
+    total: res?.total || res?.items?.length || 0,
+  };
 }
 
-export const monstersApi = {
-  // GET /api/monsters?q=&element=&page=&limit=&sort=
-  list: async (filters: MonsterFilters = {}): Promise<Paginated<Monster>> => {
-    return Api<Paginated<Monster>>(`${BASE}${toQuery(filters)}`);
-  },
+/**
+ * Busca um monstro específico pelo ID
+ */
+export async function getMonster(id: number): Promise<Monster | null> {
+  if (!id) return null;
+  return await api<Monster>(`${BASE}/${id}`);
+}
 
-  // GET /api/monsters/:id
-  get: async (id: number | string): Promise<Monster> => {
-    return Api<Monster>(`${BASE}/${encodeURIComponent(id)}`);
-  },
+/**
+ * Cria novo monstro
+ */
+export async function createMonster(data: Partial<Monster>): Promise<Monster | null> {
+  const res = await api<Monster>(BASE, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return res || null;
+}
 
-  // POST /api/monsters
-  create: async (
-    data: Partial<Monster> & { name: string; element: string; natStars: number }
-  ): Promise<Monster> => {
-    return Api<Monster>(BASE, {
-      method: 'POST',
-      // Tipagem para BodyInit: o helper faz a serialização JSON, aqui só ajustamos o tipo
-      body: data as unknown as BodyInit,
-    });
-  },
+/**
+ * Atualiza um monstro existente
+ */
+export async function updateMonster(id: number, data: Partial<Monster>): Promise<Monster | null> {
+  const res = await api<Monster>(`${BASE}/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+  return res || null;
+}
 
-  // PUT /api/monsters/:id
-  update: async (
-    id: number | string,
-    data: Partial<Monster>
-  ): Promise<Monster> => {
-    return Api<Monster>(`${BASE}/${encodeURIComponent(id)}`, {
-      method: 'PUT',
-      body: data as unknown as BodyInit,
-    });
-  },
-
-  // DELETE /api/monsters/:id
-  remove: async (id: number | string): Promise<void> => {
-    await Api<void>(`${BASE}/${encodeURIComponent(id)}`, { method: 'DELETE' });
-  },
-};
-
-export default monstersApi;
+/**
+ * Remove um monstro
+ */
+export async function deleteMonster(id: number): Promise<boolean> {
+  const res = await api<{ ok?: boolean }>(`${BASE}/${id}`, {
+    method: "DELETE",
+  });
+  return !!res?.ok;
+}

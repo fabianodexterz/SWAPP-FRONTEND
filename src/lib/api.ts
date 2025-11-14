@@ -1,165 +1,105 @@
-// =====================================================
-// src/lib/api.ts — versão consolidada e 100% funcional
-// =====================================================
-
-// Métodos HTTP suportados
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+// src/lib/api.ts
 
 /**
- * Função base de requisições para a API do SWAPP.
- * Exemplo:
- *   await Api('/health');
- *   await Api('/monsters', { method: 'POST', body: JSON.stringify({...}) });
+ * Client HTTP mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­nimo para o frontend.
+ * - Usa fetch nativo
+ * - BASE configurÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡vel por NEXT_PUBLIC_API_BASE
+ * - LanÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§a erro com mensagem amigÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡vel
  */
-export async function Api<T = any>(
-  path: string,
-  init: RequestInit & { method?: HttpMethod } = {}
-): Promise<T> {
-  const base = process.env.NEXT_PUBLIC_API_URL || 'https://api.swap.dev.br';
-  const url = path.startsWith('http') ? path : `${base}${path}`;
 
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...(init.headers || {}),
-  };
+const BASE =
+  process.env.NEXT_PUBLIC_API_BASE?.replace(/\/+$/, "") || "http://localhost:10000";
 
-  const res = await fetch(url, { ...init, headers, cache: 'no-store' });
+type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json }
+  | Json[];
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(text || `Request failed: ${res.status}`);
-  }
-
-  if (res.status === 204) return undefined as unknown as T;
-
-  return (await res.json()) as T;
-}
-
-// Alias para compatibilidade: "api"
-export { Api as api };
-
-// =====================================================
-// Tipos compartilhados
-// =====================================================
-
-export type Paginated<T> = {
-  items: T[];
-  page: number;
-  limit: number;
-  total: number;
+export type ApiOptions = Omit<RequestInit, "body"> & {
+  body?: Json | FormData | undefined;
 };
 
-// =====================================================
-// MONSTERS
-// =====================================================
+/**
+ * Chamada genÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â©rica.
+ * Exemplo: api<{ ok: boolean }>("/health")
+ */
+export default async function api<T = any>(path: string, opts: ApiOptions = {}): Promise<T> {
+  const url = path.startsWith("http") ? path : `${BASE}${path}`;
 
-export type MonsterElement = 'Fire' | 'Water' | 'Wind' | 'Light' | 'Dark';
+  const headers = new Headers(opts.headers);
+  const isForm = typeof FormData !== "undefined" && opts.body instanceof FormData;
 
+  if (!isForm) {
+    // sÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â³ define JSON se nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o for FormData
+    headers.set("Content-Type", "application/json");
+  }
+
+  const init: RequestInit = {
+    method: opts.method ?? "GET",
+    credentials: "include",
+    ...opts,
+    headers,
+    body:
+      opts.body == null
+        ? undefined
+        : isForm
+        ? (opts.body as FormData)
+        : JSON.stringify(opts.body),
+  };
+
+  const res = await fetch(url, init);
+
+  // Tenta parsear JSON sempre que possÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­vel
+  let data: any = null;
+  const text = await res.text().catch(() => "");
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = text; // pode ser string (ex.: "/health")
+  }
+
+  if (!res.ok) {
+    const message =
+      (data && (data.message || data.error)) ||
+      `Erro ${res.status} ao chamar ${path}`;
+    throw new Error(message);
+  }
+
+  return data as T;
+}
+
+/* =========================
+ * Endpoints especÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­ficos
+ * =======================*/
+
+/** Presets */
+export type Preset = {
+  id?: string | number;
+  name?: string;
+  tags?: string[];
+  author?: string;
+  createdAt?: string;
+};
+
+export async function getPresets(): Promise<Preset[]> {
+  return api<Preset[]>("/presets");
+}
+
+/** Monsters API */
 export type Monster = {
   id: number;
-  name: string;
-  element: MonsterElement;
-  natStars: number;
-  archetype?: string | null;
-  awakened?: boolean;
-  portraitUrl?: string | null;
+  name?: string;
   swarfarmId?: number | null;
 };
 
-export type MonsterFilters = {
-  q?: string;
-  page?: number;
-  limit?: number;
-  element?: MonsterElement;
-};
-
-// CRUD completo da entidade Monster
 export const monstersApi = {
-  list(filters: MonsterFilters = {}): Promise<Paginated<Monster>> {
-    const params = new URLSearchParams();
-    if (filters.q) params.set('q', filters.q);
-    if (filters.page) params.set('page', String(filters.page));
-    if (filters.limit) params.set('limit', String(filters.limit));
-    if (filters.element) params.set('element', filters.element);
-    const qs = params.toString();
-    return Api<Paginated<Monster>>(`/monsters${qs ? `?${qs}` : ''}`);
-  },
+  list: (): Promise<Monster[]> => api<Monster[]>("/monsters"),
+  get: (id: string | number): Promise<Monster> => api<Monster>(`/monsters/${id}`),
 
-  create(payload: {
-    swarfarmId?: number | null;
-    name: string;
-    element: MonsterElement;
-    natStars?: number;
-    archetype?: string | null;
-    awakened?: boolean;
-    portraitUrl?: string | null;
-  }): Promise<Monster> {
-    return Api<Monster>('/monsters', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-    });
-  },
-
-  update(id: number, data: Partial<Monster>): Promise<Monster> {
-    return Api<Monster>(`/monsters/${id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(data),
-    });
-  },
-
-  remove(id: number): Promise<void> {
-    return Api<void>(`/monsters/${id}`, { method: 'DELETE' });
-  },
+  /** Cria monstro (payload mÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­nimo).  */
+  create: (payload: { swarfarmId?: number | null; name?: string }) =>
+    api<Monster>("/monsters", { method: "POST", body: payload }),
 };
-
-// Helper para listar monstros (usado nas páginas)
-export async function fetchMonsters(
-  q = '',
-  page = 1,
-  limit = 20
-): Promise<Paginated<Monster>> {
-  return monstersApi.list({ q, page, limit });
-}
-
-// =====================================================
-// OPTIMIZER
-// =====================================================
-
-export type OptimizerResponse = {
-  runes: any[];
-  artifacts: any[];
-  [key: string]: any;
-};
-
-export async function fetchOptimizer(
-  monsterId: number | string
-): Promise<OptimizerResponse> {
-  return Api<OptimizerResponse>(`/optimizer/${monsterId}`);
-}
-
-// =====================================================
-// PRESETS
-// =====================================================
-
-export type Preset = {
-  id?: number | string;
-  locale: string;
-  name: string;
-  monsterName: string;
-  runeSets: string;
-  stats?: Record<string, any>;
-  [key: string]: any;
-};
-
-export async function fetchPresets(): Promise<{ items: Preset[] }> {
-  const data = await Api<Preset[] | { items: Preset[] }>('/presets');
-  return Array.isArray(data) ? { items: data } : data;
-}
-
-// =====================================================
-// HEALTHCHECK
-// =====================================================
-
-export async function fetchHealth(): Promise<{ ok: boolean }> {
-  return Api<{ ok: boolean }>('/health');
-}

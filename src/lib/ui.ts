@@ -1,6 +1,6 @@
 // src/lib/ui.ts
-// Centraliza os caminhos dos ícones usados no app (elementos, runas, arena).
-// Mantenha os arquivos em /public/icons/** como você já organizou.
+// Centraliza os caminhos dos ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â­cones usados no app (elementos, runas, arena).
+// Mantenha os arquivos em /public/icons/** como vocÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âª jÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ organizou.
 
 export type ElementKey = 'Fire' | 'Water' | 'Wind' | 'Light' | 'Dark';
 
@@ -12,7 +12,7 @@ export const ELEMENT_ICON: Record<ElementKey, string> = {
   Dark:  '/icons/elements/DarkSymbol.webp',
 };
 
-// Runas — use exatamente os nomes que aparecem nos chips da UI
+// Runas ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡ÃƒÂ¯Ã‚Â¿Ã‚Â½ use exatamente os nomes que aparecem nos chips da UI
 // (Swift, Violent, Rage, Will, Vampire, Blade, Energy, Guard, Focus, Nemesis, Shield, Revenge, Destroy, Fight, Tolerance, Seal, Intangible, Determination, Endure, Enhance)
 export const RUNE_ICON: Record<string, string> = {
   Swift: '/icons/runes/Swift.webp',

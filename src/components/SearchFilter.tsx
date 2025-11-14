@@ -1,90 +1,54 @@
+// src/components/SearchFilter.tsx
 'use client';
 
 import React from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-
-/**
- * Hook de debounce sem dependências externas.
- * Retorna uma função memoizada que só executa após `delay` ms sem novas chamadas.
- */
-function useDebouncedCallback<T extends any[]>(
-  fn: (...args: T) => void,
-  delay = 300
-) {
-  const fnRef = React.useRef(fn);
-  const timerRef = React.useRef<number | null>(null);
-
-  // Mantém sempre a versão mais recente da função
-  React.useEffect(() => {
-    fnRef.current = fn;
-  }, [fn]);
-
-  const callback = React.useCallback(
-    (...args: T) => {
-      if (timerRef.current) {
-        window.clearTimeout(timerRef.current);
-      }
-      timerRef.current = window.setTimeout(() => {
-        fnRef.current(...args);
-      }, delay);
-    },
-    [delay]
-  );
-
-  // Cleanup
-  React.useEffect(() => {
-    return () => {
-      if (timerRef.current) window.clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  return callback;
-}
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import type { Route } from 'next'; // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ precisa estar no topo
+import { useDebouncedCallback } from 'use-debounce';
 
 type Props = {
+  /** nome do parÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢metro de busca na URL (ex.: ?q=) */
+  queryKey?: string;
+  /** valor inicial (fallback caso a URL nÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o tenha o param) */
+  defaultValue?: string;
   /** placeholder do input */
   placeholder?: string;
-  /** chave do query param (default: 'q') */
-  queryKey?: string;
-  /** atraso do debounce em ms (default: 300) */
-  delay?: number;
   /** classes extras */
   className?: string;
-  /** valor inicial opcional */
-  defaultValue?: string;
+  /** delay do debounce em ms */
+  delay?: number;
 };
 
-/**
- * Componente de filtro/busca que sincroniza o valor com a URL (?q=...)
- * e faz debounce para evitar muitas navegações.
- */
 export default function SearchFilter({
-  placeholder = 'Buscar…',
   queryKey = 'q',
-  delay = 300,
-  className = 'input w-full',
   defaultValue,
+  placeholder = 'Pesquisar...',
+  className = '',
+  delay = 350,
 }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const initial = defaultValue ?? (searchParams.get(queryKey) ?? '');
+  // valor inicial: prioriza o que jÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ estÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡ na URL
+  const initial = defaultValue ?? searchParams.get(queryKey) ?? '';
   const [value, setValue] = React.useState<string>(initial);
 
   const applyQuery = useDebouncedCallback((val: string) => {
     const params = new URLSearchParams(searchParams.toString());
+
     if (val && val.trim()) params.set(queryKey, val.trim());
     else params.delete(queryKey);
 
-    // opcional: resetar paginação ao filtrar
+    // opcional: ao filtrar, resetar paginaÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o
     params.delete('page');
 
     const qs = params.toString();
-    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    const href = (qs ? `${pathname}?${qs}` : pathname) as unknown as Route; // ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ cast para typedRoutes
+    router.replace(href, { scroll: false });
   }, delay);
 
-  // dispara a atualização com debounce quando o value muda
+  // dispara a atualizaÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â£o com debounce quando o valor muda
   React.useEffect(() => {
     applyQuery(value);
   }, [value, applyQuery]);
@@ -92,10 +56,10 @@ export default function SearchFilter({
   return (
     <input
       className={className}
+      placeholder={placeholder}
       value={value}
       onChange={(e) => setValue(e.target.value)}
-      placeholder={placeholder}
-      aria-label="Filtro de busca"
+      autoComplete="off"
     />
   );
 }

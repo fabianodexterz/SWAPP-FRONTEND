@@ -1,12 +1,16 @@
 {
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
-      "destination": "/login"
+      "has": [{ "type": "host", "value": "swap.dev.br" }],
+      "destination": "https://app.swap.dev.br",
+      "permanent": true
     },
     {
       "source": "/(.*)",
-      "destination": "/$1"
+      "has": [{ "type": "host", "value": "www.swap.dev.br" }],
+      "destination": "https://swap.dev.br/$1",
+      "permanent": true
     }
   ]
 }

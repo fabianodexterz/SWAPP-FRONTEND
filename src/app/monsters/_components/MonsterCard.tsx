@@ -20,7 +20,7 @@ export default function MonsterCard({ m }: { m: Monster }) {
           <div className="flex items-center gap-2 mt-1">
             <span className={`badge ${elementColor(m.element)}`}>{m.element}</span>
             {m.archetype && <span className="badge">{m.archetype}</span>}
-            <span className="badge">★ {m.natStars}</span>
+            <span className="badge">âËœâ€¦ {m.natStars}</span>
             <span className="badge">{m.awakened ? "Awakened" : "Not Awakened"}</span>
           </div>
         </div>

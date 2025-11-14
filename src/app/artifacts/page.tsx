@@ -17,7 +17,7 @@ export default function ArtifactsPage(){
     <h2>Artefatos</h2>
     <label>Unit ID: <input value={unitId} onChange={e=>setUnitId(e.target.value)} /></label>
     <button onClick={evaluate} style={{marginLeft:8}}>Avaliar equipados</button>
-    <button onClick={suggest} style={{marginLeft:8}}>Sugerir do inventário</button>
+    <button onClick={suggest} style={{marginLeft:8}}>Sugerir do inventÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¡rio</button>
     <div style={{display:'grid', gap:12, marginTop:16}}>
       {evalRes && <pre style={{background:'#11161d',padding:12,borderRadius:12}}>{JSON.stringify(evalRes,null,2)}</pre>}
       {suggRes && <pre style={{background:'#11161d',padding:12,borderRadius:12}}>{JSON.stringify(suggRes,null,2)}</pre>}

@@ -46,7 +46,7 @@ export default function SettingsPage(){
   return (
     <Protected>
       <div className="max-w-xl mx-auto p-6 space-y-6">
-        <h1 className="text-2xl font-semibold">Configurações</h1>
+        <h1 className="text-2xl font-semibold">ConfiguraÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â§ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âµes</h1>
         {msg && <div className="text-emerald-300 text-sm">{msg}</div>}
         {err && <div className="text-red-300 text-sm">{err}</div>}
         <form onSubmit={onSubmit} className="space-y-3">

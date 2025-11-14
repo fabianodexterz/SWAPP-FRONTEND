@@ -1,47 +1,35 @@
-// src/App.tsx
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { Api } from '@/lib/api';
-import { useToastStore } from '@/store/toast';
+import React, { useEffect, useState } from "react";
+import api from "@/lib/api";
 
-/**
- * Pequena sonda de saúde do backend.
- * Renderiza nada; apenas verifica /health e dispara toast.
- */
+type HealthResponse = { ok?: boolean } | string | null;
+
 export default function App() {
-  const [ok, setOk] = useState<boolean | null>(null);
-  const { addToast } = useToastStore();
+  const [status, setStatus] = useState<string>("Carregando...");
 
   useEffect(() => {
     let mounted = true;
 
-    (async () => {
+    const fetchStatus = async () => {
       try {
-        // CHAME A FUNÇÃO Api DIRETAMENTE (não existe Api.get)
-        const h = await Api<{ ok: boolean }>('/health');
-
+        const data = await api<HealthResponse>("/health");
         if (!mounted) return;
 
-        setOk(!!h?.ok);
-
-        if (h?.ok) {
-          addToast('Backend conectado com sucesso!', 'success');
-        } else {
-          addToast('Backend fora do ar', 'error');
-        }
-      } catch (_) {
+        const text =
+          typeof data === "string" ? data : data?.ok ? "online" : "offline";
+        setStatus(`API: ${text ?? "desconhecido"}`);
+      } catch {
         if (!mounted) return;
-        setOk(false);
-        addToast('Não foi possível contatar o backend.', 'error');
+        setStatus("API: offline");
       }
-    })();
+    };
 
+    fetchStatus();
     return () => {
       mounted = false;
     };
-  }, [addToast]);
+  }, []);
 
-  // Não precisa renderizar nada
-  return null;
+  return <div className="text-xs opacity-70 px-2 py-1">{status}</div>;
 }

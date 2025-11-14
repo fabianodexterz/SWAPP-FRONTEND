@@ -1,0 +1,22 @@
+
+/* SWAPP Optimizer Premium Theme v3.2.1 */
+:root{--kai-gold:#cbb797;--kai-gold-weak:#e6d6ac;--panel-bg:rgba(255,255,255,.02);--panel-brd:rgba(255,255,255,.08);--chip-bg:rgba(255,255,255,.06);--chip-brd:rgba(255,255,255,.12);--muted:rgba(255,255,255,.6);--muted-2:rgba(255,255,255,.4)}
+.kai-section{border:1px solid var(--panel-brd);background:var(--panel-bg);border-radius:16px;padding:16px}
+.kai-section__title{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--kai-gold-weak);letter-spacing:.2px;margin-bottom:8px}
+.kai-chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:12px;border:1px solid var(--chip-brd);background:var(--chip-bg);color:var(--muted);font-size:.85rem;transition:background .2s ease,border-color .2s ease}
+.kai-chip--on{background:rgba(203,183,151,.12);color:var(--kai-gold-weak);border-color:rgba(203,183,151,.35)}
+.kai-input{background:rgba(255,255,255,.04);color:#fff;border:1px solid var(--panel-brd);height:40px;border-radius:12px;padding:0 12px;outline:none}
+.kai-input:focus{border-color:rgba(203,183,151,.65);box-shadow:0 0 0 3px rgba(203,183,151,.15)}
+.kai-results{display:grid;grid-template-columns:1fr;gap:16px}
+@media (min-width:900px){.kai-results{grid-template-columns:1fr 1fr}}
+.kai-resultcard{border:1px solid var(--panel-brd);background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border-radius:18px;padding:16px}
+.kai-resultcard__head{display:flex;align-items:center;justify-content:space-between;color:#fff}
+.kai-resultcard__monster{display:flex;align-items:center;gap:10px;color:var(--kai-gold-weak);font-weight:700}
+.kai-resultcard__slots{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+@media (min-width:640px){.kai-resultcard__slots{grid-template-columns:1fr 1fr}}
+.kai-slot{border:1px solid var(--panel-brd);background:rgba(255,255,255,.02);border-radius:14px;padding:12px}
+.kai-slot__head{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.9rem;margin-bottom:6px}
+.kai-slot__stats{display:flex;flex-wrap:wrap;gap:6px}
+.kai-stat-pill{font-size:.8rem;border:1px solid var(--chip-brd);border-radius:10px;padding:3px 8px;color:var(--muted);background:var(--chip-bg)}
+.kai-score{display:grid;gap:6px;min-width:180px}
+.kai-help{color:var(--muted-2);font-size:.8rem}
